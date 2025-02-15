@@ -9,15 +9,13 @@ const Inicio = () => {
       {/* Logo */}
       <img src={logo} alt="Logo Mini Super" className="logo" />
 
-      {/* Título */}
-      <h1 className="titulo">
-        <span>MINI</span> <span className="negrita">Super</span>
-      </h1>
-
       {/* Botones */}
       <div className="botones">
-        <a href="/Registro" className="boton">boton</a>
-      </div>
+   <a href="/Registro" className="boton">REGISTRO</a>
+   <a href="/Venta" className="boton">VENDER</a>
+   <a href="/Reporte" className="boton">REPORTE</a>
+</div>
+
     </div>
   );
 };
