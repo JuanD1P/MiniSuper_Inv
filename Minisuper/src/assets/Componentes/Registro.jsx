@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import "./Registro.css";
 
 const Registro = () => {
   const [producto, setProducto] = useState({ 
@@ -32,151 +33,77 @@ const Registro = () => {
     fetchProductos();
   }, []);
 
-  const handleChangeProducto = (e) => {
-    setProducto({ ...producto, [e.target.name]: e.target.value });
+  const handleChange = (e, setState) => {
+    setState(prev => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const handleChangeLote = (e) => {
-    setLote({ ...lote, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmitProducto = async (e) => {
+  const handleSubmit = async (e, endpoint, data, setState, successMessage) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:5000/api/productos", producto);
-      alert("✅ Producto registrado con éxito!");
-      setProducto({ 
-        nombre_Producto: "", 
-        Descripcion: "",
-        precio: "",
-        stock_total: "",
-        categoria: "",
-        distribuidor: "",
-        stock_min: ""
-      });
-
-      const response = await axios.get("http://localhost:5000/api/productos");
-      setProductos(response.data);
+      await axios.post(`http://localhost:5000/api/${endpoint}`, data);
+      alert(successMessage);
+      setState(Object.fromEntries(Object.keys(data).map(key => [key, ""])));
+      
+      if (endpoint === "productos") {
+        const response = await axios.get("http://localhost:5000/api/productos");
+        setProductos(response.data);
+      }
     } catch (error) {
-      console.error("❌ Error al registrar el producto:", error);
-    }
-  };
-
-  const handleSubmitLote = async (e) => {
-    e.preventDefault();
-    try {
-      await axios.post("http://localhost:5000/api/lotes", lote);
-      alert("✅ Lote registrado con éxito!");
-      setLote({ id_producto: "", numero_lote: "", stock: "", fecha_vencimiento: "" });
-    } catch (error) {
-      console.error("❌ Error al registrar el lote:", error);
+      console.error(`❌ Error al registrar en ${endpoint}:`, error);
     }
   };
 
   return (
-    <div>
-      <h2>Registro de Producto</h2>
-      <form onSubmit={handleSubmitProducto}>
-        <input
-          type="text"
-          name="nombre_Producto"
-          placeholder="Nombre del producto"
-          value={producto.nombre_Producto}
-          onChange={handleChangeProducto}
-          required
-        />
-        <textarea
-          name="Descripcion"
-          placeholder="Descripción del producto"
-          value={producto.Descripcion}
-          onChange={handleChangeProducto}
-          required
-        />
-        <input
-          type="number"
-          name="precio"
-          placeholder="Precio"
-          value={producto.precio}
-          onChange={handleChangeProducto}
-          required
-        />
-        <input
-          type="number"
-          name="stock_total"
-          placeholder="Stock total"
-          value={producto.stock_total}
-          onChange={handleChangeProducto}
-          required
-        />
-        <input
-          type="text"
-          name="categoria"
-          placeholder="Categoría"
-          value={producto.categoria}
-          onChange={handleChangeProducto}
-          required
-        />
-        <input
-          type="text"
-          name="distribuidor"
-          placeholder="Distribuidor"
-          value={producto.distribuidor}
-          onChange={handleChangeProducto}
-          required
-        />
-        <input
-          type="number"
-          name="stock_min"
-          placeholder="Stock mínimo"
-          value={producto.stock_min}
-          onChange={handleChangeProducto}
-          required
-        />
-        <button type="submit">Registrar Producto</button>
-      </form>
-
-      <hr />
-
-      <h2>Registro de Lote</h2>
-      <form onSubmit={handleSubmitLote}>
-        <select
-          name="id_producto"
-          value={lote.id_producto}
-          onChange={handleChangeLote}
-          required
-        >
-          <option value="">Seleccione un producto</option>
-          {productos.map((producto) => (
-            <option key={producto.id_producto} value={producto.id_producto}>
-              {producto.nombre_Producto}
-            </option>
+    <div className="registro-container">
+      <div className="form-container">
+        <h2>Registro de Producto</h2>
+        <form onSubmit={(e) => handleSubmit(e, "productos", producto, setProducto, "✅ Producto registrado con éxito!")}> 
+          {Object.keys(producto).map((key) => (
+            key === "categoria" ? (
+              <select key={key} name={key} value={producto[key]} onChange={(e) => handleChange(e, setProducto)} required>
+                <option value="">Seleccione una categoría</option>
+                <option value="true">Perecedero</option>
+                <option value="false">No Perecedero</option>
+              </select>
+            ) : (
+              <input 
+                key={key} 
+                type={key.includes("precio") || key.includes("stock") ? "number" : "text"}
+                name={key}
+                placeholder={key.replace("_", " ").toUpperCase()}
+                value={producto[key]}
+                onChange={(e) => handleChange(e, setProducto)}
+                required
+              />
+            )
           ))}
-        </select>
-        <input
-          type="text"
-          name="numero_lote"
-          placeholder="Número de lote"
-          value={lote.numero_lote}
-          onChange={handleChangeLote}
-          required
-        />
-        <input
-          type="number"
-          name="stock"
-          placeholder="Stock"
-          value={lote.stock}
-          onChange={handleChangeLote}
-          required
-        />
-        <input
-          type="date"
-          name="fecha_vencimiento"
-          value={lote.fecha_vencimiento}
-          onChange={handleChangeLote}
-          required
-        />
-        <button type="submit">Registrar Lote</button>
-      </form>
+          <button type="submit">Registrar Producto</button>
+        </form>
+      </div>
+      
+      <div className="form-container">
+        <h2>Registro de Lote</h2>
+        <form onSubmit={(e) => handleSubmit(e, "lotes", lote, setLote, "✅ Lote registrado con éxito!")}> 
+          <select name="id_producto" value={lote.id_producto} onChange={(e) => handleChange(e, setLote)} required>
+            <option value="">Seleccione un producto</option>
+            {productos.map((prod) => (
+              <option key={prod.id_producto} value={prod.id_producto}>{prod.nombre_Producto}</option>
+            ))}
+          </select>
+          {Object.keys(lote).filter(key => key !== "id_producto").map((key) => (
+            <input 
+              key={key} 
+              type={key.includes("fecha") ? "date" : key.includes("stock") ? "number" : "text"}
+              name={key}
+              placeholder={key.replace("_", " ").toUpperCase()}
+              value={lote[key]}
+              onChange={(e) => handleChange(e, setLote)}
+              required
+            />
+          ))}
+          <button type="submit">Registrar Lote</button>
+        </form>
+      </div>
     </div>
   );
 };
