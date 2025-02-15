@@ -4,7 +4,6 @@ import productosRoutes from "./Routes/productos.js";
 import lotesRoutes from "./Routes/lotes.js";
 
 
-
 const app = express();
 
 // Middleware
