@@ -71,7 +71,7 @@ const Registro = () => {
   return (
     <div>
       {/* Formulario de Productos */}
-      <h2>Registro de Producto</h2>
+      <h2>waooooo</h2>
       <form onSubmit={handleSubmitProducto}>
         <input
           type="text"
