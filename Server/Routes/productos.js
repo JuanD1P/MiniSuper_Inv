@@ -5,18 +5,17 @@ const router = express.Router();
 
 // Ruta para registrar un nuevo producto
 router.post("/", (req, res) => {
-    const { nombre_Producto, descripcion, precio, stock_total, categoria, distribuidor, stock_min } = req.body;
+    const { nombre_Producto, Descripcion, precio, stock_total, categoria, distribuidor, stock_min } = req.body;
 
-    if (!nombre_Producto || !descripcion || precio === undefined || stock_total === undefined || categoria === undefined || !distribuidor || stock_min === undefined) {
+    // Verificar que todos los campos estén presentes
+    if (!nombre_Producto || !Descripcion || precio === undefined || stock_total === undefined || !categoria || !distribuidor || stock_min === undefined) {
         return res.status(400).json({ error: "Todos los campos son obligatorios" });
     }
 
-    const sql = `
-        INSERT INTO producto (id_producto, nombre_Producto, descripcion, precio, stock_total, categoria, distribuidor, stock_min) 
-        VALUES (?, ?, ?, ?, ?, ?, ?)
-    `;
+    const sql = `INSERT INTO producto (nombre_Producto, Descripcion, precio, stock_total, categoria, distribuidor, stock_min) 
+                 VALUES (?, ?, ?, ?, ?, ?, ?)`;
 
-    con.query(sql, [nombre_Producto, descripcion, precio, stock_total, categoria, distribuidor, stock_min], (err, result) => {
+    con.query(sql, [nombre_Producto, Descripcion, precio, stock_total, categoria, distribuidor, stock_min], (err, result) => {
         if (err) {
             console.error("Error al registrar el producto:", err);
             return res.status(500).json({ error: "Error al registrar el producto", err });
@@ -40,3 +39,4 @@ router.get("/", (req, res) => {
 });
 
 export default router;
+
