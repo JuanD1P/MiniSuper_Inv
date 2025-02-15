@@ -2,22 +2,20 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 const Registro = () => {
-  // Estado para el producto
   const [producto, setProducto] = useState({ 
     nombre_Producto: "", 
     Distribuidor: "", 
     Descripcion: ""  
   });
 
-  // Estado para el lote
-  const [productos, setProductos] = useState([]); // Lista de productos
+  const [productos, setProductos] = useState([]);
   const [lote, setLote] = useState({
     id_producto: "",
     numero_lote: "",
+    stock: "",
     fecha_vencimiento: "",
   });
 
-  // Obtener los productos existentes al cargar la página
   useEffect(() => {
     const fetchProductos = async () => {
       try {
@@ -30,17 +28,14 @@ const Registro = () => {
     fetchProductos();
   }, []);
 
-  // Manejar cambios en los inputs del producto
   const handleChangeProducto = (e) => {
     setProducto({ ...producto, [e.target.name]: e.target.value });
   };
 
-  // Manejar cambios en los inputs del lote
   const handleChangeLote = (e) => {
     setLote({ ...lote, [e.target.name]: e.target.value });
   };
 
-  // Enviar datos del producto
   const handleSubmitProducto = async (e) => {
     e.preventDefault();
     try {
@@ -48,7 +43,6 @@ const Registro = () => {
       alert("✅ Producto registrado con éxito!");
       setProducto({ nombre_Producto: "", Distribuidor: "", Descripcion: "" });
 
-      // Actualizar la lista de productos después de agregar uno nuevo
       const response = await axios.get("http://localhost:5000/api/productos");
       setProductos(response.data);
     } catch (error) {
@@ -56,13 +50,12 @@ const Registro = () => {
     }
   };
 
-  // Enviar datos del lote
   const handleSubmitLote = async (e) => {
     e.preventDefault();
     try {
       await axios.post("http://localhost:5000/api/lotes", lote);
       alert("✅ Lote registrado con éxito!");
-      setLote({ id_producto: "", numero_lote: "", fecha_vencimiento: "" });
+      setLote({ id_producto: "", numero_lote: "", stock: "", fecha_vencimiento: "" });
     } catch (error) {
       console.error("❌ Error al registrar el lote:", error);
     }
@@ -70,8 +63,7 @@ const Registro = () => {
 
   return (
     <div>
-      {/* Formulario de Productos */}
-      <h2>waooooo</h2>
+      <h2>Registro de Producto</h2>
       <form onSubmit={handleSubmitProducto}>
         <input
           type="text"
@@ -101,7 +93,6 @@ const Registro = () => {
 
       <hr />
 
-      {/* Formulario de Lotes */}
       <h2>Registro de Lote</h2>
       <form onSubmit={handleSubmitLote}>
         <select
@@ -122,6 +113,14 @@ const Registro = () => {
           name="numero_lote"
           placeholder="Número de lote"
           value={lote.numero_lote}
+          onChange={handleChangeLote}
+          required
+        />
+        <input
+          type="number"
+          name="stock"
+          placeholder="Stock"
+          value={lote.stock}
           onChange={handleChangeLote}
           required
         />
