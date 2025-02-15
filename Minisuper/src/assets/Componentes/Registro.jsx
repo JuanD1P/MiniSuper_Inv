@@ -8,7 +8,7 @@ const Registro = () => {
     Descripcion: "",
     precio: "",
     unidad_de_medida: "",
-    categoria: "1", // Se mantiene como string, se convierte a número al enviar
+    categoria: "1",
     distribuidor: "",
     stock_min: "",
   });
@@ -28,11 +28,10 @@ const Registro = () => {
   const fetchProductos = async () => {
     try {
       const response = await axios.get("http://localhost:5000/api/productos");
-      console.log("📦 Productos obtenidos:", response.data);
+      console.log("📥 Productos obtenidos:", response.data);
       setProductos(response.data);
     } catch (error) {
       console.error("❌ Error al obtener los productos:", error);
-      alert("Error al cargar los productos. Verifique la conexión con el servidor.");
     }
   };
 
@@ -40,12 +39,7 @@ const Registro = () => {
     const { name, value } = e.target;
     setProducto((prev) => ({
       ...prev,
-      [name]:
-        name === "categoria"
-          ? value // Se mantiene como string hasta que se envíe
-          : ["precio", "stock_min"].includes(name)
-          ? value === "" ? "" : Number(value) // Evitar NaN
-          : value,
+      [name]: ["precio", "stock_min"].includes(name) ? (value === "" ? "" : Number(value)) : value,
     }));
   };
 
@@ -56,17 +50,16 @@ const Registro = () => {
   const handleSubmitProducto = async (e) => {
     e.preventDefault();
     try {
-      const productoAEnviar = {
-        ...producto,
-        categoria: Number(producto.categoria), // Convertir categoría a número
-      };
+      const productoAEnviar = { ...producto, categoria: Number(producto.categoria) };
       console.log("📤 Enviando producto:", productoAEnviar);
 
-      await axios.post("http://localhost:5000/api/productos", productoAEnviar, {
+      const response = await axios.post("http://localhost:5000/api/productos", productoAEnviar, {
         headers: { "Content-Type": "application/json" },
       });
 
-      alert("✅ Producto registrado con éxito!");
+      console.log("✅ Respuesta del servidor:", response.data);
+      alert("Producto registrado con éxito!");
+
       setProducto({
         nombre_Producto: "",
         Descripcion: "",
@@ -77,21 +70,24 @@ const Registro = () => {
         stock_min: "",
       });
 
-      fetchProductos(); // Recargar la lista de productos
+      fetchProductos();
     } catch (error) {
-      console.error("❌ Error al registrar el producto:", error);
-      alert("Error al registrar el producto. Verifique los datos.");
+      console.error("❌ Error al registrar el producto:", error.response?.data || error);
+      alert("Error al registrar el producto.");
     }
   };
 
   const handleSubmitLote = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:5000/api/lotes", lote);
-      alert("✅ Lote registrado con éxito!");
+      console.log("📤 Enviando lote:", lote);
+      const response = await axios.post("http://localhost:5000/api/lotes", lote);
+      console.log("✅ Respuesta del servidor:", response.data);
+      alert("Lote registrado con éxito!");
+
       setLote({ id_producto: "", numero_lote: "", stock: "", fecha_vencimiento: "" });
     } catch (error) {
-      console.error("❌ Error al registrar el lote:", error);
+      console.error("❌ Error al registrar el lote:", error.response?.data || error);
       alert("Error al registrar el lote.");
     }
   };
@@ -101,72 +97,30 @@ const Registro = () => {
       <h2>Registro de Producto</h2>
       <form onSubmit={handleSubmitProducto} className="form-container">
         <label>Nombre del producto:</label>
-        <input
-          type="text"
-          name="nombre_Producto"
-          placeholder="Nombre del producto"
-          value={producto.nombre_Producto}
-          onChange={handleChangeProducto}
-          required
-        />
+        <input type="text" name="nombre_Producto" value={producto.nombre_Producto} onChange={handleChangeProducto} />
 
         <label>Descripción:</label>
-        <textarea
-          name="Descripcion"
-          placeholder="Descripción del producto"
-          value={producto.Descripcion}
-          onChange={handleChangeProducto}
-          required
-        />
+        <textarea name="Descripcion" value={producto.Descripcion} onChange={handleChangeProducto} />
 
         <label>Precio:</label>
-        <input
-          type="number"
-          name="precio"
-          placeholder="Precio"
-          value={producto.precio}
-          onChange={handleChangeProducto}
-          step="any"
-          required
-        />
+        <input type="number" name="precio" value={producto.precio} onChange={handleChangeProducto} step="any" />
 
         <label>Unidad de medida:</label>
-        <input
-          type="text"
-          name="unidad_de_medida"
-          placeholder="Unidad de medida"
-          value={producto.unidad_de_medida}
-          onChange={handleChangeProducto}
-          required
-        />
+        <input type="text" name="unidad_de_medida" value={producto.unidad_de_medida} onChange={handleChangeProducto} />
 
         <label>Categoría:</label>
-        <select name="categoria" value={producto.categoria} onChange={handleChangeProducto} required>
+        <select name="categoria" value={producto.categoria} onChange={handleChangeProducto}>
           <option value="1">Perecedero</option>
           <option value="0">No Perecedero</option>
         </select>
 
         <label>Distribuidor:</label>
-        <input
-          type="text"
-          name="distribuidor"
-          placeholder="Distribuidor"
-          value={producto.distribuidor}
-          onChange={handleChangeProducto}
-          required
-        />
+        <input type="text" name="distribuidor" value={producto.distribuidor} onChange={handleChangeProducto} />
 
         <label>Stock mínimo:</label>
-        <input
-          type="number"
-          name="stock_min"
-          placeholder="Stock mínimo"
-          value={producto.stock_min}
-          onChange={handleChangeProducto}
-          required
-        />
+        <input type="number" name="stock_min" value={producto.stock_min} onChange={handleChangeProducto} />
 
-        <button type="submit" className="submit-button">Registrar Producto</button>
+        <button type="submit">Registrar Producto</button>
       </form>
 
       <hr />
@@ -174,7 +128,7 @@ const Registro = () => {
       <h2>Registro de Lote</h2>
       <form onSubmit={handleSubmitLote} className="form-container">
         <label>Producto:</label>
-        <select name="id_producto" value={lote.id_producto} onChange={handleChangeLote} required>
+        <select name="id_producto" value={lote.id_producto} onChange={handleChangeLote}>
           <option value="">Seleccione un producto</option>
           {productos.map((producto) => (
             <option key={producto.id_producto} value={producto.id_producto}>
@@ -184,38 +138,42 @@ const Registro = () => {
         </select>
 
         <label>Número de lote:</label>
-        <input
-          type="text"
-          name="numero_lote"
-          placeholder="Número de lote"
-          value={lote.numero_lote}
-          onChange={handleChangeLote}
-          required
-        />
+        <input type="text" name="numero_lote" value={lote.numero_lote} onChange={handleChangeLote} />
 
         <label>Stock:</label>
-        <input
-          type="number"
-          name="stock"
-          placeholder="Stock"
-          value={lote.stock}
-          onChange={handleChangeLote}
-          required
-        />
+        <input type="number" name="stock" value={lote.stock} onChange={handleChangeLote} />
 
         <label>Fecha de vencimiento:</label>
-        <input
-          type="date"
-          name="fecha_vencimiento"
-          value={lote.fecha_vencimiento}
-          onChange={handleChangeLote}
-          required
-        />
+        <input type="date" name="fecha_vencimiento" value={lote.fecha_vencimiento} onChange={handleChangeLote} />
 
-        <button type="submit" className="submit-button">Registrar Lote</button>
+        <button type="submit">Registrar Lote</button>
       </form>
     </div>
   );
 };
 
 export default Registro;
+const handleSubmitProducto = async (e) => {
+  e.preventDefault();
+  console.log("📤 Datos a enviar:", producto); // Verifica qué se está enviando
+
+  try {
+    const response = await axios.post("http://localhost:5000/api/productos", producto);
+    console.log("✅ Respuesta del servidor:", response.data);
+    alert("Producto registrado con éxito!");
+    setProducto({
+      nombre_Producto: "",
+      Descripcion: "",
+      precio: "",
+      unidad_de_medida: "",
+      categoria: "1",
+      distribuidor: "",
+      stock_min: "",
+    });
+    fetchProductos();
+  } catch (error) {
+    console.error("❌ Error al registrar el producto:", error.response?.data || error);
+    alert("Error al registrar el producto.");
+  }
+};
+
