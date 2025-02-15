@@ -5,15 +5,15 @@ const router = express.Router();
 
 // Ruta para registrar un nuevo lote
 router.post("/", (req, res) => {
-    const { id_producto, numero_lote, fecha_vencimiento } = req.body;
+    const { id_producto, stock, fecha_vencimiento } = req.body;
 
-    if (!id_producto || !numero_lote || !fecha_vencimiento) {
+    if (!id_producto || stock === undefined || !fecha_vencimiento) {
         return res.status(400).json({ error: "Todos los campos son obligatorios" });
     }
 
-    const sql = "INSERT INTO lotes (id_producto, numero_lote, fecha_vencimiento) VALUES (?, ?, ?)";
-    
-    con.query(sql, [id_producto, numero_lote, fecha_vencimiento], (err, result) => {
+    const sql = "INSERT INTO lotes (id_producto, stock, fecha_vencimiento) VALUES (?, ?, ?)";
+
+    con.query(sql, [id_producto, stock, fecha_vencimiento], (err, result) => {
         if (err) {
             console.error("Error al registrar el lote:", err);
             return res.status(500).json({ error: "Error al registrar el lote", err });
@@ -26,8 +26,11 @@ router.post("/", (req, res) => {
 // Ruta para obtener todos los lotes
 router.get("/", (req, res) => {
     const sql = `
-        SELECT lotes.id_lote, lotes.numero_lote, lotes.fecha_vencimiento, 
-               producto.nombre_Producto 
+        SELECT 
+            lotes.id_lote, 
+            lotes.stock, 
+            lotes.fecha_vencimiento, 
+            producto.nombre_Producto 
         FROM lotes
         JOIN producto ON lotes.id_producto = producto.id_producto
     `;

@@ -5,19 +5,20 @@ const router = express.Router();
 
 // Ruta para registrar un nuevo producto
 router.post("/", (req, res) => {
-    const { nombre_Producto, Distribuidor, Descripcion } = req.body;
+    const { nombre_Producto, descripcion, precio, stock_total, categoria, distribuidor, stock_min } = req.body;
 
-    if (!nombre_Producto || !Distribuidor || !Descripcion) {
+    if (!nombre_Producto || !descripcion || precio === undefined || stock_total === undefined || categoria === undefined || !distribuidor || stock_min === undefined) {
         return res.status(400).json({ error: "Todos los campos son obligatorios" });
     }
 
-    const sql = "INSERT INTO producto (nombre_Producto, Distribuidor, Descripcion) VALUES (?, ?, ?)";
+    const sql = `
+        INSERT INTO producto (nombre_Producto, descripcion, precio, stock_total, categoria, distribuidor, stock_min) 
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+    `;
 
-    console.log("Ejecutando SQL:", sql, [nombre_Producto, Distribuidor, Descripcion]); // Imprimir la consulta
-
-    con.query(sql, [nombre_Producto, Distribuidor, Descripcion], (err, result) => {
+    con.query(sql, [nombre_Producto, descripcion, precio, stock_total, categoria, distribuidor, stock_min], (err, result) => {
         if (err) {
-            console.error("Error al ejecutar la consulta:", err);
+            console.error("Error al registrar el producto:", err);
             return res.status(500).json({ error: "Error al registrar el producto", err });
         }
         console.log("Producto registrado con éxito, ID:", result.insertId);
