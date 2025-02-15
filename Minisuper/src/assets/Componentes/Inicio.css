@@ -1,25 +1,22 @@
-/* Estilos para Inicio.css */
-
 /* Contenedor principal */
 .contenedor {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  height: 100vh;
+  justify-content: flex-start;
+  min-height: 100vh;
   width: 100vw;
-  background: linear-gradient(to bottom, rgb(0, 192, 64), rgb(0, 255, 128)); 
+  background: linear-gradient(to bottom, rgb(26, 101, 17), rgb(0, 109, 94)); 
   text-align: center;
+  overflow-y: auto; /* Permite desplazamiento si el contenido es largo */
+  padding-bottom: 20px; /* Espacio extra para evitar cortes */
 }
 
+/* Logo centrado en la parte superior */
 .logo {
-  position: absolute;
-  top: 10%; 
-  left: 50%;
-  transform: translateX(-50%);
-  width: 450px; 
+  margin-top: 20px;
+  width: 450px;
   height: auto;
-  margin-bottom: 20px;
 }
 
 /* Estilos para el título */
@@ -29,94 +26,76 @@
   text-align: center;
 }
 
-.negrita {
-  font-weight: bold;
-}
-
-/* Contenedor de botones en fila */
 .botones {
+  display: flex;
+  flex-direction: row; /* Cambiado a fila */
+  justify-content: center;
+  gap: 20px; /* Espacio entre botones */
+  margin: 20px 0;
+}
+
+/* Botones */
+.botonregistro, .botonventa, .botonreporte {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 25px;
+  width: 200px;
+  background: linear-gradient(to bottom, #FFD700, #DAA520);
+  color: #8B6508;
+  font-size: 1.2rem;
+  font-weight: bold;
+  text-decoration: none;
+  border-radius: 25px;
+  border: 2px solid #B8860B;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+}
+
+.botonregistro:hover, .botonventa:hover, .botonreporte:hover {
+  background: linear-gradient(to bottom, #DAA520, #FFD700);
+  color: #5A3E00;
+  box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.4);
+}
+
+
+/* Iconos para los botones */
+.botonregistro::before { content: '\1F4DD'; margin-right: 8px; }
+.botonventa::before { content: '\1F6D2'; margin-right: 8px; }
+
+/* Contenedor de la tabla */
+.productos-container {
+  width: 90%;
+  max-width: 1000px;
   margin-top: 20px;
-  display: flex;
-  justify-content: center;
-  gap: 15px; 
+  overflow-x: auto; /* Permite desplazamiento horizontal en tablas */
+}
+.productos-container h2 {
+  font-size: 2.5rem; /* Aumenta el tamaño del texto */
+  font-weight: bold; /* Hace el texto más grueso */
+  color: #000000; /* Un color más oscuro para mejor visibilidad */
+  text-align: center; /* Centrar el título */
+  margin-bottom: 15px; /* Espaciado inferior */
+}
+
+/* Estilos de la tabla */
+.tabla-productos {
   width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
 }
 
-
-.botonregistro {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 12px 25px;
-  background: linear-gradient(to bottom, #FFD700, #DAA520); /* Degradado dorado */
-  color: #8B6508;
-  font-size: 1.2rem;
-  font-weight: bold;
-  text-decoration: none;
-  border-radius: 25px;
-  border: 2px solid #B8860B;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
-  transition: all 0.3s ease;
-}
-.botonventa {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 12px 25px;
-  background: linear-gradient(to bottom, #FFD700, #DAA520); /* Degradado dorado */
-  color: #8B6508;
-  font-size: 1.2rem;
-  font-weight: bold;
-  text-decoration: none;
-  border-radius: 25px;
-  border: 2px solid #B8860B;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
-  transition: all 0.3s ease;
+.tabla-productos th, .tabla-productos td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: center;
 }
 
-.botonreporte {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 12px 25px;
-  background: linear-gradient(to bottom, #FFD700, #DAA520); /* Degradado dorado */
-  color: #8B6508;
-  font-size: 1.2rem;
-  font-weight: bold;
-  text-decoration: none;
-  border-radius: 25px;
-  border: 2px solid #B8860B;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
-  transition: all 0.3s ease;
-}
-.botonregistro:hover {
-  background: linear-gradient(to bottom, #DAA520, #FFD700);
-  color: #5A3E00;
-  box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.4);
-}
-.botonreporte:hover {
-  background: linear-gradient(to bottom, #DAA520, #FFD700);
-  color: #5A3E00;
-  box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.4);
-}
-.botonventa:hover {
-  background: linear-gradient(to bottom, #DAA520, #FFD700);
-  color: #5A3E00;
-  box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.4);
+.tabla-productos th {
+  background-color: #001057;
+  color: white;
 }
 
-/* Icono para el botón de Registro */
-.botonregistro::before {
-  content: '\1F4DD'; 
-  font-size: 1.2rem;
-  margin-right: 8px;
+.tabla-productos tbody tr:nth-child(even) {
+  background-color: #53739f;
 }
-
-/* Icono para el botón de Venta */
-.botonventa::before {
-  content: '\1F6D2'; 
-  font-size: 1.2rem;
-  margin-right: 8px;
-}
-
-
