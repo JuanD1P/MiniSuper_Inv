@@ -6,7 +6,7 @@
   justify-content: flex-start;
   min-height: 100vh;
   width: 100vw;
-  background: linear-gradient(to bottom, rgb(26, 101, 17), rgb(0, 109, 94)); 
+  background: linear-gradient(to bottom, rgb(107, 165, 101), rgb(0, 109, 94)); 
   text-align: center;
   overflow-y: auto; /* Permite desplazamiento si el contenido es largo */
   padding-bottom: 20px; /* Espacio extra para evitar cortes */

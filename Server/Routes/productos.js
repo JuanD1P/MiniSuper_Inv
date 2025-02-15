@@ -38,4 +38,22 @@ router.get("/", (req, res) => {
     });
 });
 
+
+// Ruta para eliminar un producto por ID
+router.delete("/:id", (req, res) => {
+    const { id } = req.params;
+    const sql = "DELETE FROM producto WHERE id_producto = ?";
+
+    con.query(sql, [id], (err, result) => {
+        if (err) {
+            console.error("❌ Error al eliminar el producto:", err);
+            return res.status(500).json({ error: "Error al eliminar el producto" });
+        }
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ error: "Producto no encontrado" });
+        }
+        res.json({ message: "✅ Producto eliminado correctamente" });
+    });
+});
+
 export default router;

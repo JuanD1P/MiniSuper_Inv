@@ -43,5 +43,17 @@ router.get("/", (req, res) => {
         res.json(results);
     });
 });
+router.get("/stocks", (req, res) => {
+    const sql = `SELECT id_producto, SUM(stock) AS total_stock FROM lotes GROUP BY id_producto`;
+    con.query(sql, (err, results) => {
+        if (err) {
+            console.error("Error al obtener los stocks:", err);
+            return res.status(500).json({ error: "Error al obtener los stocks", err });
+        }
+        res.json(results);
+    });
+});
+
+
 
 export default router;
