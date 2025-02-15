@@ -1,6 +1,6 @@
 import React from 'react';
 import './Inicio.css'; // Importa el archivo CSS
-import logo from './Recursos/LOGUITO.png'; // Asegúrate de que la ruta sea correcta
+import logo from './Recursos/LOGUITO.png'; 
 
 
 const Inicio = () => {
