@@ -13,8 +13,13 @@
 }
 
 /* Estilos para el logo */
+/* Estilos para el logo */
 .logo {
-  width: 450px; /* Aumenta el tamaño de la imagen */
+  position: absolute;
+  top: 10%; /* Ajusta la imagen más arriba */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 450px; /* Tamaño de la imagen */
   height: auto;
   margin-bottom: 20px;
 }
@@ -40,7 +45,22 @@
 }
 
 /* Estilos para los botones tipo "Play" */
-.boton {
+.botonregistro {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 25px;
+  background: linear-gradient(to bottom, #FFD700, #DAA520); /* Degradado dorado */
+  color: #8B6508;
+  font-size: 1.2rem;
+  font-weight: bold;
+  text-decoration: none;
+  border-radius: 25px;
+  border: 2px solid #B8860B;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+}
+.botonventa {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -56,15 +76,54 @@
   transition: all 0.3s ease;
 }
 
-.boton:hover {
+.botonreporte {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 25px;
+  background: linear-gradient(to bottom, #FFD700, #DAA520); /* Degradado dorado */
+  color: #8B6508;
+  font-size: 1.2rem;
+  font-weight: bold;
+  text-decoration: none;
+  border-radius: 25px;
+  border: 2px solid #B8860B;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+}
+.botonregistro:hover {
+  background: linear-gradient(to bottom, #DAA520, #FFD700);
+  color: #5A3E00;
+  box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.4);
+}
+.botonreporte:hover {
+  background: linear-gradient(to bottom, #DAA520, #FFD700);
+  color: #5A3E00;
+  box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.4);
+}
+.botonventa:hover {
   background: linear-gradient(to bottom, #DAA520, #FFD700);
   color: #5A3E00;
   box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.4);
 }
 
-/* Icono dentro del botón */
-.boton::before {
-  content: '\25B6'; /* Código Unicode del ícono de "Play" */
+/* Icono para el botón de Registro */
+.botonregistro::before {
+  content: '\1F4DD'; /* Bloc de notas con lápiz */
+  font-size: 1.2rem;
+  margin-right: 8px;
+}
+
+/* Icono para el botón de Venta */
+.botonventa::before {
+  content: '\1F6D2'; /* Carrito de compras */
+  font-size: 1.2rem;
+  margin-right: 8px;
+}
+
+/* Icono para el botón de Reporte */
+.botonreporte::before {
+  content: '\1F4CA'; /* Gráfica de barras */
   font-size: 1.2rem;
   margin-right: 8px;
 }
