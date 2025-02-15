@@ -16,7 +16,7 @@ const Inicio = () => {
 
       {/* Botones */}
       <div className="botones">
-        <a href="/Registro" className="boton">boton</a>
+        <a href="/Registro" className="boton">Registro</a>
       </div>
     </div>
   );
