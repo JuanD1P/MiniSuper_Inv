@@ -3,14 +3,14 @@ import axios from "axios";
 import "./Registro.css";
 
 const Registro = () => {
-  const [producto, setProducto] = useState({ 
-    nombre_Producto: "", 
+  const [producto, setProducto] = useState({
+    nombre_Producto: "",
     Descripcion: "",
     precio: "",
-    stock_total: "",
-    categoria: true, // Cambiamos a booleano
+    unidad_de_medida: "",
+    categoria: true,
     distribuidor: "",
-    stock_min: ""
+    stock_min: "",
   });
 
   const [productos, setProductos] = useState([]);
@@ -35,12 +35,10 @@ const Registro = () => {
 
   const handleChangeProducto = (e) => {
     const { name, value } = e.target;
-    // Convertimos el valor de "categoria" a booleano
-    if (name === "categoria") {
-      setProducto({ ...producto, [name]: value === "true" });
-    } else {
-      setProducto({ ...producto, [name]: value });
-    }
+    setProducto((prev) => ({
+      ...prev,
+      [name]: name === "categoria" ? value === "true" : value,
+    }));
   };
 
   const handleChangeLote = (e) => {
@@ -52,14 +50,15 @@ const Registro = () => {
     try {
       await axios.post("http://localhost:5000/api/productos", producto);
       alert("✅ Producto registrado con éxito!");
-      setProducto({ 
-        nombre_Producto: "", 
+
+      setProducto({
+        nombre_Producto: "",
         Descripcion: "",
         precio: "",
-        stock_total: "",
-        categoria: true, // Reiniciamos a true
+        unidad_de_medida: "",
+        categoria: true,
         distribuidor: "",
-        stock_min: ""
+        stock_min: "",
       });
 
       const response = await axios.get("http://localhost:5000/api/productos");
@@ -84,6 +83,7 @@ const Registro = () => {
     <div className="registro-container">
       <h2>Registro de Producto</h2>
       <form onSubmit={handleSubmitProducto} className="form-container">
+        <label>Nombre del producto:</label>
         <input
           type="text"
           name="nombre_Producto"
@@ -92,6 +92,8 @@ const Registro = () => {
           onChange={handleChangeProducto}
           required
         />
+
+        <label>Descripción:</label>
         <textarea
           name="Descripcion"
           placeholder="Descripción del producto"
@@ -99,31 +101,35 @@ const Registro = () => {
           onChange={handleChangeProducto}
           required
         />
+
+        <label>Precio:</label>
         <input
           type="number"
           name="precio"
           placeholder="Precio"
           value={producto.precio}
           onChange={handleChangeProducto}
+          step="any"
           required
         />
+
+        <label>Unidad de medida:</label>
         <input
-          type="number"
-          name="stock_total"
-          placeholder="Stock total"
-          value={producto.stock_total}
+          type="text"
+          name="unidad_de_medida"
+          placeholder="Unidad de medida"
+          value={producto.unidad_de_medida}
           onChange={handleChangeProducto}
           required
         />
-        <select
-          name="categoria"
-          value={producto.categoria.toString()} // Convertimos el booleano a string
-          onChange={handleChangeProducto}
-          required
-        >
+
+        <label>Categoría:</label>
+        <select name="categoria" value={producto.categoria.toString()} onChange={handleChangeProducto} required>
           <option value="true">Perecedero</option>
           <option value="false">No Perecedero</option>
         </select>
+
+        <label>Distribuidor:</label>
         <input
           type="text"
           name="distribuidor"
@@ -132,6 +138,8 @@ const Registro = () => {
           onChange={handleChangeProducto}
           required
         />
+
+        <label>Stock mínimo:</label>
         <input
           type="number"
           name="stock_min"
@@ -140,6 +148,7 @@ const Registro = () => {
           onChange={handleChangeProducto}
           required
         />
+
         <button type="submit" className="submit-button">Registrar Producto</button>
       </form>
 
@@ -147,12 +156,8 @@ const Registro = () => {
 
       <h2>Registro de Lote</h2>
       <form onSubmit={handleSubmitLote} className="form-container">
-        <select
-          name="id_producto"
-          value={lote.id_producto}
-          onChange={handleChangeLote}
-          required
-        >
+        <label>Producto:</label>
+        <select name="id_producto" value={lote.id_producto} onChange={handleChangeLote} required>
           <option value="">Seleccione un producto</option>
           {productos.map((producto) => (
             <option key={producto.id_producto} value={producto.id_producto}>
@@ -160,6 +165,8 @@ const Registro = () => {
             </option>
           ))}
         </select>
+
+        <label>Número de lote:</label>
         <input
           type="text"
           name="numero_lote"
@@ -168,6 +175,8 @@ const Registro = () => {
           onChange={handleChangeLote}
           required
         />
+
+        <label>Stock:</label>
         <input
           type="number"
           name="stock"
@@ -176,6 +185,8 @@ const Registro = () => {
           onChange={handleChangeLote}
           required
         />
+
+        <label>Fecha de vencimiento:</label>
         <input
           type="date"
           name="fecha_vencimiento"
@@ -183,6 +194,7 @@ const Registro = () => {
           onChange={handleChangeLote}
           required
         />
+
         <button type="submit" className="submit-button">Registrar Lote</button>
       </form>
     </div>
