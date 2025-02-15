@@ -8,7 +8,7 @@ const Registro = () => {
     Descripcion: "",
     precio: "",
     unidad_de_medida: "",
-    categoria: true,
+    categoria: 1, // Ahora es un número (1 = Perecedero, 0 = No Perecedero)
     distribuidor: "",
     stock_min: "",
   });
@@ -25,6 +25,7 @@ const Registro = () => {
     const fetchProductos = async () => {
       try {
         const response = await axios.get("http://localhost:5000/api/productos");
+        console.log("📦 Productos obtenidos:", response.data); // Depuración
         setProductos(response.data);
       } catch (error) {
         console.error("❌ Error al obtener los productos:", error);
@@ -35,9 +36,12 @@ const Registro = () => {
 
   const handleChangeProducto = (e) => {
     const { name, value } = e.target;
+
     setProducto((prev) => ({
       ...prev,
-      [name]: name === "categoria" ? value === "true" : value,
+      [name]: 
+        name === "categoria" ? (value === "true" ? 1 : 0) : // Convertir booleano a 1 o 0
+        ["precio", "stock_min"].includes(name) ? Number(value) : value, // Convertir números
     }));
   };
 
@@ -48,7 +52,12 @@ const Registro = () => {
   const handleSubmitProducto = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:5000/api/productos", producto);
+      console.log("📤 Enviando producto:", producto); // Depuración antes del envío
+
+      await axios.post("http://localhost:5000/api/productos", producto, {
+        headers: { "Content-Type": "application/json" },
+      });
+
       alert("✅ Producto registrado con éxito!");
 
       setProducto({
@@ -56,11 +65,12 @@ const Registro = () => {
         Descripcion: "",
         precio: "",
         unidad_de_medida: "",
-        categoria: true,
+        categoria: 1,
         distribuidor: "",
         stock_min: "",
       });
 
+      // Recargar la lista de productos
       const response = await axios.get("http://localhost:5000/api/productos");
       setProductos(response.data);
     } catch (error) {
@@ -124,9 +134,9 @@ const Registro = () => {
         />
 
         <label>Categoría:</label>
-        <select name="categoria" value={producto.categoria.toString()} onChange={handleChangeProducto} required>
-          <option value="true">Perecedero</option>
-          <option value="false">No Perecedero</option>
+        <select name="categoria" value={producto.categoria} onChange={handleChangeProducto} required>
+          <option value="1">Perecedero</option>
+          <option value="0">No Perecedero</option>
         </select>
 
         <label>Distribuidor:</label>
