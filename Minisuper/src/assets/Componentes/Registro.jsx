@@ -8,7 +8,7 @@ const Registro = () => {
     Descripcion: "",
     precio: "",
     unidad_de_medida: "",
-    categoria: 1, // Ahora es un número (1 = Perecedero, 0 = No Perecedero)
+    categoria: "1", // Se mantiene como string, se convierte a número al enviar
     distribuidor: "",
     stock_min: "",
   });
@@ -22,26 +22,30 @@ const Registro = () => {
   });
 
   useEffect(() => {
-    const fetchProductos = async () => {
-      try {
-        const response = await axios.get("http://localhost:5000/api/productos");
-        console.log("📦 Productos obtenidos:", response.data); // Depuración
-        setProductos(response.data);
-      } catch (error) {
-        console.error("❌ Error al obtener los productos:", error);
-      }
-    };
     fetchProductos();
   }, []);
 
+  const fetchProductos = async () => {
+    try {
+      const response = await axios.get("http://localhost:5000/api/productos");
+      console.log("📦 Productos obtenidos:", response.data);
+      setProductos(response.data);
+    } catch (error) {
+      console.error("❌ Error al obtener los productos:", error);
+      alert("Error al cargar los productos. Verifique la conexión con el servidor.");
+    }
+  };
+
   const handleChangeProducto = (e) => {
     const { name, value } = e.target;
-
     setProducto((prev) => ({
       ...prev,
-      [name]: 
-        name === "categoria" ? (value === "true" ? 1 : 0) : // Convertir booleano a 1 o 0
-        ["precio", "stock_min"].includes(name) ? Number(value) : value, // Convertir números
+      [name]:
+        name === "categoria"
+          ? value // Se mantiene como string hasta que se envíe
+          : ["precio", "stock_min"].includes(name)
+          ? value === "" ? "" : Number(value) // Evitar NaN
+          : value,
     }));
   };
 
@@ -52,29 +56,31 @@ const Registro = () => {
   const handleSubmitProducto = async (e) => {
     e.preventDefault();
     try {
-      console.log("📤 Enviando producto:", producto); // Depuración antes del envío
+      const productoAEnviar = {
+        ...producto,
+        categoria: Number(producto.categoria), // Convertir categoría a número
+      };
+      console.log("📤 Enviando producto:", productoAEnviar);
 
-      await axios.post("http://localhost:5000/api/productos", producto, {
+      await axios.post("http://localhost:5000/api/productos", productoAEnviar, {
         headers: { "Content-Type": "application/json" },
       });
 
       alert("✅ Producto registrado con éxito!");
-
       setProducto({
         nombre_Producto: "",
         Descripcion: "",
         precio: "",
         unidad_de_medida: "",
-        categoria: 1,
+        categoria: "1",
         distribuidor: "",
         stock_min: "",
       });
 
-      // Recargar la lista de productos
-      const response = await axios.get("http://localhost:5000/api/productos");
-      setProductos(response.data);
+      fetchProductos(); // Recargar la lista de productos
     } catch (error) {
       console.error("❌ Error al registrar el producto:", error);
+      alert("Error al registrar el producto. Verifique los datos.");
     }
   };
 
@@ -86,6 +92,7 @@ const Registro = () => {
       setLote({ id_producto: "", numero_lote: "", stock: "", fecha_vencimiento: "" });
     } catch (error) {
       console.error("❌ Error al registrar el lote:", error);
+      alert("Error al registrar el lote.");
     }
   };
 
@@ -211,4 +218,4 @@ const Registro = () => {
   );
 };
 
-export default Registro;  
+export default Registro;
