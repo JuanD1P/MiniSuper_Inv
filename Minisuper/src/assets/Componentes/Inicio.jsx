@@ -11,10 +11,12 @@ const Inicio = () => {
 
       {/* Botones */}
       <div className="botones">
-   <a href="/Registro" className="boton">REGISTRO</a>
-   <a href="/Venta" className="boton">VENDER</a>
-   <a href="/Reporte" className="boton">REPORTE</a>
+  <a href="/Registro" className="botonregistro">REGISTRO</a>
+  <a href="/Venta" className="botonventa">VENDER</a>
+  <a href="/Reporte" className="botonreporte">REPORTE</a>
+
 </div>
+
 
     </div>
   );
