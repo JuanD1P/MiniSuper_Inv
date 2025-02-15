@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
-import Inicio from './assets/Componentes/Inicio'
+import Inicio from './assets/Componentes/Inicio';
 import Registro from './assets/Componentes/Registro';
 import Crear from './assets/Componentes/Crear';
 import Editar from './assets/Componentes/Editar';
