@@ -175,7 +175,7 @@ const Registro = () => {
           onChange={handleChangeLote}
           required
         />
-        <button type="submit">Registrar Lote</button>
+        <button type="submit">RegistrarLote</button>
       </form>
     </div>
   );
