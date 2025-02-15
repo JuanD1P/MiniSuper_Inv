@@ -4,8 +4,12 @@ import axios from "axios";
 const Registro = () => {
   const [producto, setProducto] = useState({ 
     nombre_Producto: "", 
-    Distribuidor: "", 
-    Descripcion: ""  
+    Descripcion: "",
+    precio: "",
+    stock_total: "",
+    categoria: "",
+    distribuidor: "",
+    stock_min: ""
   });
 
   const [productos, setProductos] = useState([]);
@@ -41,7 +45,15 @@ const Registro = () => {
     try {
       await axios.post("http://localhost:5000/api/productos", producto);
       alert("✅ Producto registrado con éxito!");
-      setProducto({ nombre_Producto: "", Distribuidor: "", Descripcion: "" });
+      setProducto({ 
+        nombre_Producto: "", 
+        Descripcion: "",
+        precio: "",
+        stock_total: "",
+        categoria: "",
+        distribuidor: "",
+        stock_min: ""
+      });
 
       const response = await axios.get("http://localhost:5000/api/productos");
       setProductos(response.data);
@@ -73,18 +85,50 @@ const Registro = () => {
           onChange={handleChangeProducto}
           required
         />
-        <input
-          type="text"
-          name="Distribuidor"
-          placeholder="Distribuidor"
-          value={producto.Distribuidor}
-          onChange={handleChangeProducto}
-          required
-        />
         <textarea
           name="Descripcion"
           placeholder="Descripción del producto"
           value={producto.Descripcion}
+          onChange={handleChangeProducto}
+          required
+        />
+        <input
+          type="number"
+          name="precio"
+          placeholder="Precio"
+          value={producto.precio}
+          onChange={handleChangeProducto}
+          required
+        />
+        <input
+          type="number"
+          name="stock_total"
+          placeholder="Stock total"
+          value={producto.stock_total}
+          onChange={handleChangeProducto}
+          required
+        />
+        <input
+          type="text"
+          name="categoria"
+          placeholder="Categoría"
+          value={producto.categoria}
+          onChange={handleChangeProducto}
+          required
+        />
+        <input
+          type="text"
+          name="distribuidor"
+          placeholder="Distribuidor"
+          value={producto.distribuidor}
+          onChange={handleChangeProducto}
+          required
+        />
+        <input
+          type="number"
+          name="stock_min"
+          placeholder="Stock mínimo"
+          value={producto.stock_min}
           onChange={handleChangeProducto}
           required
         />
