@@ -119,9 +119,4 @@
   margin-right: 8px;
 }
 
-/* Icono para el botón de Reporte */
-.botonreporte::before {
-  content: '\1F4CA';/
-  font-size: 1.2rem;
-  margin-right: 8px;
-}
+
