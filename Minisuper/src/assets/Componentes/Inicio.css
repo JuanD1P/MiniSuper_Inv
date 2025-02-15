@@ -68,14 +68,14 @@
   width: 90%;
   max-width: 1000px;
   margin-top: 20px;
-  overflow-x: auto; /* Permite desplazamiento horizontal en tablas */
+  overflow-x: auto; 
 }
 .productos-container h2 {
-  font-size: 2.5rem; /* Aumenta el tamaño del texto */
-  font-weight: bold; /* Hace el texto más grueso */
-  color: #000000; /* Un color más oscuro para mejor visibilidad */
-  text-align: center; /* Centrar el título */
-  margin-bottom: 15px; /* Espaciado inferior */
+  font-size: 2.5rem; 
+  font-weight: bold; 
+  color: #000000;
+  text-align: center;
+  margin-bottom: 15px; 
 }
 
 /* Estilos de la tabla */
