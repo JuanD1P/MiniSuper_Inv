@@ -39,7 +39,7 @@ const Reporte = () => {
 
       {/* Contenedor del título */}
       <div className="titulo-container">
-        <h1 className="titulo">Reportes</h1>
+        <h1 className="titulo">Reportesesta</h1>
       </div>
     </div>
   );
