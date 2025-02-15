@@ -11,7 +11,7 @@ const Inicio = () => {
 
       {/* Título */}
       <h1 className="titulo">
-        <span>MINI</span> <span className="negrita">SUPER</span>
+        <span>MINI</span> <span className="negrita">Super</span>
       </h1>
 
       {/* Botones */}
