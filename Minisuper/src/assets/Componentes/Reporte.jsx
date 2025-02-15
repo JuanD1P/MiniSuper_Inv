@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import "./Reporte.css"; // Importamos los estilos externos
+import "./Reporte.css"; 
+import logo from './Recursos/LOGUITO.png';
 
 const Reporte = () => {
   const [fechaHora, setFechaHora] = useState("");
@@ -30,6 +31,11 @@ const Reporte = () => {
     <div className="reporte-container">
       {/* Fecha y hora en la parte superior derecha */}
       <div className="fecha-hora">{fechaHora}</div>
+
+      {/* Logo en la parte superior y centrado horizontalmente */}
+      <div className="logo-container">
+        <img src={logo} alt="Logo" className="logo" />
+      </div>
 
       {/* Contenedor del título */}
       <div className="titulo-container">

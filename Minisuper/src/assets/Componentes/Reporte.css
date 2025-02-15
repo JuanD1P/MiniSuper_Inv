@@ -8,6 +8,7 @@
     width: 100vw;
     background-color: #1e1e1e; /* Fondo oscuro */
     color: white; /* Texto blanco */
+    position: relative;
 }
 
 /* Fecha y hora en la parte superior derecha */
@@ -20,14 +21,29 @@
     color: white;
 }
 
+/* Contenedor del logo */
+.logo-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin-top: 20px; /* Espaciado desde la parte superior */
+}
+
+/* Estilo del logo */
+.logo {
+    height: 80px; /* Ajusta el tamaño del logo según sea necesario */
+    width: auto;
+}
+
 /* Contenedor del título */
 .titulo-container {
     text-align: center;
+    margin-top: 20px; /* Espaciado debajo del logo */
 }
 
 /* Estilo del título */
 .titulo {
     font-size: 40px;
     font-weight: bold;
-    margin-top: 20px;
 }
