@@ -1,44 +1,33 @@
-/* Contenedor general */
+/* Contenedor principal */
 .reporte-container {
-    position: relative;
     display: flex;
     flex-direction: column;
-    align-items: center;
     justify-content: center;
+    align-items: center;
     height: 100vh;
-    width: 100%;
-    background-color: #f5f5f5;
+    width: 100vw;
+    background-color: #1e1e1e; /* Fondo oscuro */
+    color: white; /* Texto blanco */
 }
 
-/* Estilos para la fecha y hora */
+/* Fecha y hora en la parte superior derecha */
 .fecha-hora {
     position: absolute;
     top: 20px;
     right: 20px;
     font-size: 16px;
     font-weight: bold;
-    color: #333;
+    color: white;
 }
 
-/* Contenedor del logo y título */
-.logo-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-}
-
-/* Imagen del logo */
-.logo {
-    width: 150px;
-    height: 150px;
-    margin-bottom: 10px;
-}
-
-/* Texto de "Reportes" */
-.titulo {
-    font-size: 22px;
-    font-weight: bold;
-    color: #333;
+/* Contenedor del título */
+.titulo-container {
     text-align: center;
+}
+
+/* Estilo del título */
+.titulo {
+    font-size: 40px;
+    font-weight: bold;
+    margin-top: 20px;
 }
