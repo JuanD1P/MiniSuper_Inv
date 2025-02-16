@@ -71,5 +71,49 @@ router.delete("/:id", (req, res) => {
         res.json({ message: "✅ Producto eliminado correctamente" });
     });
 });
+// Ruta para obtener un producto por ID
+router.get("/:id", (req, res) => {
+    const { id } = req.params;
+    const sql = "SELECT * FROM producto WHERE id_producto = ?";
+
+    con.query(sql, [id], (err, result) => {
+        if (err) {
+            console.error("❌ Error al obtener el producto:", err.message);
+            return res.status(500).json({ error: "Error al obtener el producto", details: err.sqlMessage });
+        }
+        if (result.length === 0) {
+            return res.status(404).json({ error: "Producto no encontrado" });
+        }
+        res.json(result[0]);
+    });
+});
+
+// Ruta para actualizar un producto
+router.put("/:id", (req, res) => {
+    const { id } = req.params;
+    const { nombre_Producto, Descripcion, precio, unidad_de_medida, categoria, distribuidor, stock_min } = req.body;
+
+    if (!nombre_Producto || !Descripcion || precio === undefined || !unidad_de_medida || categoria === undefined || !distribuidor || stock_min === undefined) {
+        return res.status(400).json({ error: "Todos los campos son obligatorios" });
+    }
+
+    const sql = `UPDATE producto SET 
+                    nombre_Producto = ?, 
+                    Descripcion = ?, 
+                    precio = ?, 
+                    unidad_de_medida = ?, 
+                    categoria = ?, 
+                    distribuidor = ?, 
+                    stock_min = ?
+                 WHERE id_producto = ?`;
+
+    con.query(sql, [nombre_Producto, Descripcion, precio, unidad_de_medida, categoria, distribuidor, stock_min, id], (err, result) => {
+        if (err) {
+            console.error("❌ Error al actualizar el producto:", err.message);
+            return res.status(500).json({ error: "Error al actualizar el producto", details: err.sqlMessage });
+        }
+        res.json({ message: "✅ Producto actualizado correctamente" });
+    });
+});
 
 export default router;

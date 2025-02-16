@@ -113,7 +113,7 @@ const Inicio = () => {
                       </button>
                       {opcionesVisibles === producto.id_producto && (
                         <div className="opciones">
-                          <button onClick={() => navigate(`/editar`)}>✏ Editar</button>
+                          <button onClick={() => navigate(`/editar/${producto.id_producto}`)}>✏ Editar</button>
                           <button onClick={() => eliminarProducto(producto.id_producto)}>🗑 Eliminar</button>
                         </div>
                       )}
