@@ -1,45 +1,71 @@
 .registro-container {
   display: flex;
-  justify-content: center;
-  gap: 2rem;
-  padding: 2rem;
-  background-color: #46ff3c;
+  flex-direction: column;
+  align-items: center;
+  background: linear-gradient(to bottom, rgb(107, 165, 101), rgb(0, 109, 94));
+  min-height: 100vh;
+  width: 100vw;
+  padding: 20px;
+  text-align: center;
 }
 
-.form-container {
-  background: rgb(92, 97, 247);
-  padding: 2rem;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(239, 0, 0, 0.1);
-  width: 400px;
+.logo {
+  width: 250px;
+  margin-bottom: 20px;
 }
 
 h2 {
-  text-align: center;
-  color: #070707;
+  font-size: 2rem;
+  color: white;
+  margin-bottom: 15px;
 }
 
-form {
-  display: flex;
-  flex-direction: column;
+.form-container {
+  width: 90%;
+  max-width: 700px;
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-input, select {
-  margin-bottom: 1rem;
+label {
+  display: block;
+  font-size: 1rem;
+  font-weight: bold;
+  margin: 10px 0 5px;
+  color: #333;
+}
+
+input, select, textarea {
+  width: 100%;
   padding: 10px;
-  border: 1px solid #ccc;
+  border: 2px solid #ddd;
   border-radius: 5px;
+  font-size: 1rem;
+  height: 45px; /* Altura uniforme */
+  box-sizing: border-box; /* Asegura que padding y border no alteren el tamaño */
+}
+
+textarea {
+  resize: none;
+  height: 100px; /* Ajustado para mantener proporción */
 }
 
 button {
-  background: #de2222;
-  color: white;
-  padding: 10px;
+  width: 100%;
+  padding: 12px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: rgb(0, 0, 0);
+  background: linear-gradient(to bottom, #FFD700, #DAA520);
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  margin-top: 10px;
+  transition: background 0.3s;
 }
 
 button:hover {
-  background: #ff2222;
+  background: linear-gradient(to bottom, #DAA520, #FFD700);
 }
