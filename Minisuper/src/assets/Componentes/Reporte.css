@@ -28,19 +28,22 @@
     justify-content: center;
     align-items: center;
     width: 100%;
-    margin-top: 20px; /* Espaciado desde la parte superior */
+    margin-top: 20px;
 }
 
 /* Estilo del logo */
 .logo {
-    height: 250px; /* Ajusta el tamaño del logo según sea necesario */
+    height: 250px;
     width: auto;
 }
 
-/* Contenedor del título */
+/* Contenedor del título con botón */
 .titulo-container {
-    text-align: center;
-    margin-top: 20px; /* Espaciado debajo del logo */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
 }
 
 /* Estilo del título */
@@ -50,9 +53,53 @@
     color: white;
 }
 
+/* Botón de inicio */
+.boton-inicio {
+    width: 40px;
+    height: 40px;
+    background: #ffcc00;
+    border: none;
+    border-radius: 50%;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.2s, background 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Hover y efecto al presionar */
+.boton-inicio:hover {
+    background: #ff9900;
+    transform: scale(1.1);
+}
+
+.boton-inicio:active {
+    transform: scale(0.9);
+}
+
+/* Contenedor de las tablas */
+.tablas-contenedor {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    width: 90%;
+    margin-top: 20px;
+}
+
+/* Caja para cada tabla */
+.tabla-box {
+    width: 45%;
+    background: rgba(255, 255, 255, 0.2);
+    padding: 15px;
+    border-radius: 15px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+}
+
 /* Subtítulos de las tablas */
 .subtitulo {
-    margin-top: 20px;
+    margin-bottom: 10px;
     font-size: 22px;
     font-weight: bold;
     text-align: center;
@@ -60,19 +107,10 @@
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
-/* Contenedor de las tablas */
-.tabla-container {
-    width: 90%;
-    max-height: 70vh;
-    overflow-x: auto;
-    padding-bottom: 20px;
-}
-
 /* Tablas */
 .tabla {
     width: 100%;
     border-collapse: collapse;
-    margin: 15px 0;
     background: rgb(0, 6, 85);
     border-radius: 10px;
     overflow: hidden;
@@ -91,6 +129,7 @@
 .tabla td {
     padding: 8px;
     border-bottom: 1px solid #ddd;
+    color: white;
 }
 
 /* Hover en filas */
@@ -100,20 +139,22 @@
 
 /* Responsividad */
 @media (max-width: 768px) {
-    .tabla-container {
-        width: 100%;
-        max-height: 60vh;
+    .titulo-container {
+        flex-direction: column;
     }
 
-    .tabla th, .tabla td {
-        font-size: 14px;
+    .boton-inicio {
+        width: 35px;
+        height: 35px;
+        font-size: 18px;
     }
 
-    .titulo {
-        font-size: 30px;
+    .tablas-contenedor {
+        flex-direction: column;
+        gap: 15px;
     }
 
-    .logo {
-        height: 200px;
+    .tabla-box {
+        width: 90%;
     }
 }
