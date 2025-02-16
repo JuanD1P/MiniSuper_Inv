@@ -35,12 +35,16 @@ const Reporte = () => {
     const fetchData = async () => {
       try {
         const productosResponse = await axios.get("http://localhost:5000/api/productos");
-        setProductos(productosResponse.data);
-
         const lotesResponse = await axios.get("http://localhost:5000/api/lotes");
-        setLotes(lotesResponse.data);
-
         const stocksResponse = await axios.get("http://localhost:5000/api/lotes/stocks");
+
+        const productosConStock = productosResponse.data.map(producto => {
+          const stockTotal = stocksResponse.data.find(stock => stock.id_producto === producto.id_producto)?.total_stock || 0;
+          return { ...producto, stockTotal };
+        });
+
+        setProductos(productosConStock);
+        setLotes(lotesResponse.data);
         setStocks(stocksResponse.data);
       } catch (error) {
         console.error("❌ Error al obtener los datos:", error);
@@ -63,27 +67,25 @@ const Reporte = () => {
       </div>
 
       <div className="tabla-container">
-        {/* Tabla de Productos */}
-        <h2 className="subtitulo">📦 Productos Registrados</h2>
-        <table className="tabla">
+        {/* Tabla de Productos con Stock Bajo */}
+        <h2 className="subtitulo">⚠️ Productos con Stock Bajo</h2>
+        <table className="tabla" style={{ width: 'auto', minWidth: '50%' }}>
           <thead>
             <tr>
               <th>ID</th>
               <th>Nombre</th>
-              <th>Descripción</th>
-              <th>Precio</th>
               <th>Stock Mínimo</th>
+              <th>Stock Total</th>
               <th>Distribuidor</th>
             </tr>
           </thead>
           <tbody>
-            {productos.map((producto) => (
+            {productos.filter(producto => producto.stockTotal <= producto.stock_min).map((producto) => (
               <tr key={producto.id_producto}>
                 <td>{producto.id_producto}</td>
                 <td>{producto.nombre_Producto}</td>
-                <td>{producto.Descripcion}</td>
-                <td>${producto.precio}</td>
                 <td>{producto.stock_min}</td>
+                <td>{producto.stockTotal}</td>
                 <td>{producto.distribuidor}</td>
               </tr>
             ))}
@@ -92,7 +94,7 @@ const Reporte = () => {
 
         {/* Tabla de Lotes */}
         <h2 className="subtitulo">📊 Información de Lotes</h2>
-        <table className="tabla">
+        <table className="tabla" style={{ width: 'auto', minWidth: '50%' }}>
           <thead>
             <tr>
               <th>ID Lote</th>
@@ -108,25 +110,6 @@ const Reporte = () => {
                 <td>{lote.nombre_Producto}</td>
                 <td>{lote.stock}</td>
                 <td>{lote.fecha_vencimiento}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-
-        {/* Tabla de Stocks Totales */}
-        <h2 className="subtitulo">📊 Stock Total por Producto</h2>
-        <table className="tabla">
-          <thead>
-            <tr>
-              <th>ID Producto</th>
-              <th>Stock Total</th>
-            </tr>
-          </thead>
-          <tbody>
-            {stocks.map((stock) => (
-              <tr key={stock.id_producto}>
-                <td>{stock.id_producto}</td>
-                <td>{stock.total_stock}</td>
               </tr>
             ))}
           </tbody>

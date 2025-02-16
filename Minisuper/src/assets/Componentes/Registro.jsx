@@ -117,7 +117,6 @@ const Registro = () => {
         </label>
 
         {[
-          { label: "Número de lote", name: "numero_lote", type: "text" },
           { label: "Stock", name: "stock", type: "number" },
           { label: "Fecha de vencimiento", name: "fecha_vencimiento", type: "date" },
         ].map(({ label, name, type }) => (
