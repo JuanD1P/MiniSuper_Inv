@@ -8,6 +8,7 @@ const Inicio = () => {
   const [productos, setProductos] = useState([]);
   const [stocks, setStocks] = useState({});
   const [opcionesVisibles, setOpcionesVisibles] = useState(null);
+  const [busqueda, setBusqueda] = useState(""); // Estado para la búsqueda
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -22,21 +23,17 @@ const Inicio = () => {
 
     const fetchStocks = async () => {
       try {
-          const response = await axios.get("http://localhost:5000/api/lotes/stocks"); // ✅ CORREGIDO
+          const response = await axios.get("http://localhost:5000/api/lotes/stocks");
           const stocksData = response.data;
-  
-          // Convertir array en objeto `{ id_producto: stock_total }`
           const stockTotal = stocksData.reduce((acc, item) => {
               acc[item.id_producto] = item.total_stock; 
               return acc;
           }, {});
-  
           setStocks(stockTotal);
       } catch (error) {
           console.error("❌ Error al obtener los stocks:", error);
       }
-  };
-  
+    };
 
     fetchProductos();
     fetchStocks();
@@ -59,6 +56,11 @@ const Inicio = () => {
     }
   };
 
+  // Función para filtrar productos según la búsqueda
+  const productosFiltrados = productos.filter((producto) =>
+    producto.nombre_Producto.toLowerCase().includes(busqueda.toLowerCase())
+  );
+
   return (
     <div className="contenedor">
       <img src={logo} alt="Logo Mini Super" className="logo" />
@@ -68,6 +70,15 @@ const Inicio = () => {
         <a href="/Venta" className="botonventa">VENDER</a>
         <a href="/Reporte" className="botonreporte">REPORTE</a>
       </div>
+
+      {/* Barra de búsqueda */}
+      <input 
+        type="text" 
+        placeholder="🔍 Buscar producto..." 
+        className="barra-busqueda"
+        value={busqueda}
+        onChange={(e) => setBusqueda(e.target.value)}
+      />
 
       <div className="productos-container">
         <h2>Productos Registrados</h2>
@@ -88,7 +99,7 @@ const Inicio = () => {
                 </tr>
               </thead>
               <tbody>
-                {productos.filter(p => p.categoria === categoria).map((producto) => (
+                {productosFiltrados.filter(p => p.categoria === categoria).map((producto) => (
                   <tr key={producto.id_producto}>
                     <td>{producto.nombre_Producto}</td>
                     <td>{producto.Descripcion}</td>
