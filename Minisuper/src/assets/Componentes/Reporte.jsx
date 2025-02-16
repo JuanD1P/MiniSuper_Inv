@@ -1,38 +1,15 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import "./Reporte.css"; 
-import logo from './Recursos/LOGUITO.png';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import "./Venta.css";
 
-const Reporte = () => {
-  const navigate = useNavigate();
-  const [fechaHora, setFechaHora] = useState("");
+const Venta = () => {
   const [productos, setProductos] = useState([]);
+  const [productoSeleccionado, setProductoSeleccionado] = useState(null);
   const [lotes, setLotes] = useState([]);
-  const [stocks, setStocks] = useState([]);
+  const [loteSeleccionado, setLoteSeleccionado] = useState(null);
+  const [stockTotal, setStockTotal] = useState(null);
 
-  useEffect(() => {
-    const actualizarFechaHora = () => {
-      const opciones = { 
-        timeZone: "America/Bogota",
-        year: 'numeric', 
-        month: 'long', 
-        day: 'numeric', 
-        hour: '2-digit', 
-        minute: '2-digit', 
-        second: '2-digit',
-        hour12: true
-      };
-      const fecha = new Date().toLocaleString("es-CO", opciones);
-      setFechaHora(fecha);
-    };
-
-    actualizarFechaHora();
-    const intervalo = setInterval(actualizarFechaHora, 1000);
-
-    return () => clearInterval(intervalo);
-  }, []);
-
+  // Obtener datos de productos y lotes
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -40,6 +17,7 @@ const Reporte = () => {
         const lotesResponse = await axios.get("http://localhost:5000/api/lotes");
         const stocksResponse = await axios.get("http://localhost:5000/api/lotes/stocks");
 
+        // Asociar el stock total a cada producto
         const productosConStock = productosResponse.data.map(producto => {
           const stockTotal = stocksResponse.data.find(stock => stock.id_producto === producto.id_producto)?.total_stock || 0;
           return { ...producto, stockTotal };
@@ -47,7 +25,6 @@ const Reporte = () => {
 
         setProductos(productosConStock);
         setLotes(lotesResponse.data);
-        setStocks(stocksResponse.data);
       } catch (error) {
         console.error("❌ Error al obtener los datos:", error);
       }
@@ -56,94 +33,79 @@ const Reporte = () => {
     fetchData();
   }, []);
 
-  // Calcular la fecha actual + 10 días
-  const fechaLimite = new Date();
-  fechaLimite.setDate(fechaLimite.getDate() + 10);
+  // Manejar selección de producto
+  const handleProductoChange = (e) => {
+    const idProducto = parseInt(e.target.value);
+    const producto = productos.find((p) => p.id_producto === idProducto);
+    setProductoSeleccionado(producto);
 
-  // Filtrar lotes que vencen en los próximos 10 días
-  const lotesProximosAVencer = lotes.filter((lote) => {
-    const fechaVencimiento = new Date(lote.fecha_vencimiento);
-    return fechaVencimiento <= fechaLimite;
-  }).map(lote => {
-    const fechaVencimiento = new Date(lote.fecha_vencimiento);
-    const diasRestantes = Math.ceil((fechaVencimiento - new Date()) / (1000 * 60 * 60 * 24));
-    return { ...lote, diasRestantes };
-  });
+    // Filtrar lotes del producto seleccionado
+    const lotesDelProducto = lotes.filter((lote) => lote.id_producto === idProducto);
+    setLotes(lotesDelProducto);
+    setLoteSeleccionado(null);
+    setStockTotal(producto.stockTotal); // Mostrar el stock total del producto seleccionado
+  };
+
+  // Manejar selección de lote
+  const handleLoteChange = (e) => {
+    const idLote = parseInt(e.target.value);
+    const lote = lotes.find((l) => l.id_lote === idLote);
+    setLoteSeleccionado(lote);
+  };
 
   return (
-    <div className="reporte-container">
-      <div className="fecha-hora">{fechaHora}</div>
+    <div className="venta-container">
+      <h1>🛒 Realizar Venta</h1>
 
-      <div className="logo-container">
-        <img src={logo} alt="Logo" className="logo" />
-      </div>
+      {/* Seleccionar Producto */}
+      <label>Seleccionar Producto:</label>
+      <select onChange={handleProductoChange} value={productoSeleccionado?.id_producto || ""}>
+        <option value="">-- Selecciona un Producto --</option>
+        {productos.map((producto) => (
+          <option key={producto.id_producto} value={producto.id_producto}>
+            {producto.nombre_Producto}
+          </option>
+        ))}
+      </select>
 
-      <div className="titulo-container">
-        <h1 className="titulo">
-          📋 Reporte de Productos y Lotes
-        </h1>
-        <button className="boton-inicio" onClick={() => navigate("/")}>
-          ⬅
-        </button>
-      </div>
-
-      <div className="tablas-contenedor">
-        <div className="tabla-box">
-          <h2 className="subtitulo">⚠️ Productos con Stock Bajo</h2>
-          <table className="tabla">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Nombre</th>
-                <th>Stock Mínimo</th>
-                <th>Stock Total</th>
-                <th>Distribuidor</th>
-              </tr>
-            </thead>
-            <tbody>
-              {productos.filter(producto => producto.stockTotal <= producto.stock_min).map((producto) => (
-                <tr key={producto.id_producto}>
-                  <td>{producto.id_producto}</td>
-                  <td>{producto.nombre_Producto}</td>
-                  <td>{producto.stock_min}</td>
-                  <td>{producto.stockTotal}</td>
-                  <td>{producto.distribuidor}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+      {/* Mostrar detalles del producto */}
+      {productoSeleccionado && (
+        <div className="producto-detalles">
+          <h2>Detalles del Producto</h2>
+          <p><strong>ID Producto:</strong> {productoSeleccionado.id_producto}</p>
+          <p><strong>Nombre:</strong> {productoSeleccionado.nombre_Producto}</p>
+          <p><strong>Precio:</strong> ${productoSeleccionado.precio}</p>
+          <p><strong>Unidad de Medida:</strong> {productoSeleccionado.unidad_de_medida}</p>
         </div>
+      )}
 
-        <div className="tabla-box">
-          <h2 className="subtitulo">⏳ Lotes Próximos a Vencer (Menos de 10 días)</h2>
-          <table className="tabla">
-            <thead>
-              <tr>
-                <th>ID Lote</th>
-                <th>Producto</th>
-                <th>Días para Vencer</th>
-              </tr>
-            </thead>
-            <tbody>
-              {lotesProximosAVencer.length > 0 ? (
-                lotesProximosAVencer.map((lote) => (
-                  <tr key={lote.id_lote}>
-                    <td>{lote.id_lote}</td>
-                    <td>{lote.nombre_Producto}</td>
-                    <td>{lote.diasRestantes}</td>
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan="3">✅ No hay lotes próximos a vencer</td>
-                </tr>
-              )}
-            </tbody>
-          </table>
+      {/* Seleccionar Lote (solo si hay lotes disponibles para el producto seleccionado) */}
+      {productoSeleccionado && lotes.length > 0 && (
+        <>
+          <label>Seleccionar Lote:</label>
+          <select onChange={handleLoteChange} value={loteSeleccionado?.id_lote || ""}>
+            <option value="">-- Selecciona un Lote --</option>
+            {lotes.map((lote) => (
+              <option key={lote.id_lote} value={lote.id_lote}>
+                {lote.id_lote}
+              </option>
+            ))}
+          </select>
+        </>
+      )}
+
+      {/* Mostrar detalles del lote seleccionado */}
+      {loteSeleccionado && (
+        <div className="lote-detalles">
+          <h2>Detalles del Lote</h2>
+          <p>
+            <strong>Fecha de Vencimiento:</strong> {new Date(loteSeleccionado.fecha_vencimiento).toISOString().split("T")[0]}
+          </p>
+          <p><strong>Stock Total:</strong> {stockTotal ?? "No disponible"}</p>
         </div>
-      </div>
+      )}
     </div>
   );
 };
 
-export default Reporte;
+export default Venta;
