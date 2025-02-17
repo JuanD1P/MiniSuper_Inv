@@ -1,9 +1,12 @@
 import React, { useState, useEffect, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./Registro.css";
 import logo from "./Recursos/LOGUITO.png";
 
 const Registro = () => {
+  const navigate = useNavigate(); // Hook para navegar entre rutas
+
   const [producto, setProducto] = useState({
     nombre_Producto: "",
     Descripcion: "",
@@ -70,6 +73,7 @@ const Registro = () => {
   return (
     <div className="registro-container">
       <img src={logo} alt="Logo Mini Super" className="logo" />
+      <button className="boton-inicio" onClick={() => navigate("/")}>⬅</button>
 
       <h2>Registro de Producto</h2>
       <form onSubmit={handleSubmitProducto} className="form-container">
