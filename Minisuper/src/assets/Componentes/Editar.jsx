@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import './Editar.css'; // Asegurar que se aplique el nuevo estilo
+import './Editar.css'; 
 import logo from './Recursos/LOGUITO.png';
 
 const Editar = () => {
