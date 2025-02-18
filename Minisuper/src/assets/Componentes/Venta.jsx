@@ -7,6 +7,9 @@ const Venta = () => {
   const [productoSeleccionado, setProductoSeleccionado] = useState(null);
   const [lotes, setLotes] = useState([]);
   const [loteSeleccionado, setLoteSeleccionado] = useState(null);
+  const [cantidad, setCantidad] = useState(0);
+  const [errorCantidad, setErrorCantidad] = useState("");
+  const [errorVenta, setErrorVenta] = useState(""); // Error de venta general
 
   useEffect(() => {
     const fetchProductos = async () => {
@@ -24,54 +27,110 @@ const Venta = () => {
   const handleProductoChange = async (event) => {
     const productoId = parseInt(event.target.value);
     console.log(`🛒 Producto ID seleccionado: ${productoId}`);
-  
-    // 🔍 Verifica si el producto está en la lista
-    console.log("📋 Lista de productos:", productos);
-  
+
     const producto = productos.find((p) => p.id_producto === productoId);
-  
+
     if (!producto) {
       console.warn(`⚠️ No se encontró un producto con ID: ${productoId}`);
       setProductoSeleccionado(null);
       setLotes([]);
       return;
     }
-  
+
     console.log(`✅ Producto encontrado: ${producto.nombre_Producto}`);
     setProductoSeleccionado(producto);
     setLoteSeleccionado(null);
-  
+    setCantidad(0); // Resetear cantidad seleccionada
+    setErrorCantidad(""); // Resetear mensaje de error
+
     try {
-      console.log(`🔎 Buscando lotes para el producto: ${producto.nombre_Producto}`);
-  
       const response = await axios.get(`http://localhost:5000/api/lotes`);
-      console.log("📦 Lotes obtenidos:", response.data);
-  
-      const productoNombre = producto?.nombre_Producto?.trim().toLowerCase() || "";
-      console.log(`🔍 Nombre del producto seleccionado: '${productoNombre}'`);
-  
       const lotesFiltrados = response.data.filter(
-        (lote) => lote.nombre_Producto?.trim().toLowerCase() === productoNombre
+        (lote) => lote.nombre_Producto?.trim().toLowerCase() === producto.nombre_Producto?.trim().toLowerCase()
       );
-  
+
       if (lotesFiltrados.length === 0) {
         console.warn("⚠️ No se encontraron lotes para este producto.");
-      } else {
-        console.log("✅ Lotes encontrados:", lotesFiltrados);
       }
-  
+
       setLotes(lotesFiltrados);
     } catch (error) {
       console.error("❌ Error al obtener los lotes:", error);
       setLotes([]);
     }
   };
-   
+
   const handleLoteChange = (event) => {
     const loteId = parseInt(event.target.value);
-    console.log(`🔢 Lote seleccionado: ${loteId}`);
     const lote = lotes.find((l) => l.id_lote === loteId);
     setLoteSeleccionado(lote);
+    setCantidad(0); // Resetear cantidad al cambiar de lote
+    setErrorCantidad(""); // Resetear mensaje de error
+  };
+
+  const handleCantidadChange = (event) => {
+    const value = parseInt(event.target.value, 10);
+
+    if (!isNaN(value)) {
+      setCantidad(value);
+
+      if (loteSeleccionado && value > loteSeleccionado.stock) {
+        setErrorCantidad(`❌ La cantidad no puede ser mayor al stock disponible (${loteSeleccionado.stock}).`);
+      } else {
+        setErrorCantidad("");
+      }
+    } else {
+      setCantidad(0);
+      setErrorCantidad("❌ Ingresa un número válido.");
+    }
+  };
+
+  // Función para actualizar el stock del lote
+  const actualizarStockLote = async (loteId, cantidadVendida) => {
+    try {
+      const nuevoStock = loteSeleccionado.stock - cantidadVendida;
+
+      if (nuevoStock < 0) {
+        alert("❌ No hay suficiente stock en el lote.");
+        return;
+      }
+
+      // Actualizar el stock en la base de datos
+      const response = await axios.put(`http://localhost:5000/api/lotes/${loteId}`, {
+        stock: nuevoStock,
+      });
+
+      console.log(`✅ Stock actualizado: ${response.data}`);
+    } catch (error) {
+      console.error("❌ Error al actualizar el stock:", error);
+      setErrorVenta("❌ Error al realizar la venta. Intenta nuevamente.");
+      if (error.response) {
+        alert(`❌ Error: ${error.response.data.error}`);
+      }
+    }
+  };
+
+  const handleRealizarVenta = async () => {
+    if (loteSeleccionado && cantidad > 0 && cantidad <= loteSeleccionado.stock) {
+      if (!productoSeleccionado) {
+        console.error("❌ Producto no seleccionado.");
+        return; // Si no hay un producto seleccionado, no continuar
+      }
+
+      console.log(`Venta realizada: ${cantidad} unidades del producto ${productoSeleccionado.nombre_Producto} (Lote ID: ${loteSeleccionado.id_lote})`);
+
+      // Actualizar el stock del lote en la base de datos
+      await actualizarStockLote(loteSeleccionado.id_lote, cantidad);
+
+      // Limpiar el formulario después de realizar la venta
+      setCantidad(0); // Resetear cantidad
+      setErrorCantidad(""); // Resetear mensaje de error
+      setProductoSeleccionado(null); // Resetear producto
+      setLoteSeleccionado(null); // Resetear lote
+      setLotes([]); // Limpiar lotes disponibles
+    } else {
+      setErrorCantidad("❌ Por favor, ingrese una cantidad válida para la venta.");
+    }
   };
 
   return (
@@ -118,6 +177,22 @@ const Venta = () => {
           <h2>Detalles del Lote</h2>
           <p><strong>Fecha de Vencimiento:</strong> {loteSeleccionado.fecha_vencimiento}</p>
           <p><strong>Stock Total:</strong> {loteSeleccionado.stock}</p>
+
+          <div className="cantidad-seleccion">
+            <label htmlFor="cantidad">Cantidad a Vender:</label>
+            <input
+              type="number"
+              id="cantidad"
+              value={cantidad}
+              onChange={handleCantidadChange}
+              min="1"
+              max={loteSeleccionado.stock}
+            />
+            {errorCantidad && <p className="error">{errorCantidad}</p>}
+          </div>
+
+          <button onClick={handleRealizarVenta}>Realizar Venta</button>
+          {errorVenta && <p className="error">{errorVenta}</p>} {/* Muestra el error de venta */}
         </div>
       )}
     </div>

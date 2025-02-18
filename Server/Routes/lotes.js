@@ -43,6 +43,7 @@ router.get("/", (req, res) => {
         res.json(results);
     });
 });
+
 router.get("/stocks", (req, res) => {
     const sql = `SELECT id_producto, SUM(stock) AS total_stock FROM lotes GROUP BY id_producto`;
     con.query(sql, (err, results) => {
@@ -55,5 +56,27 @@ router.get("/stocks", (req, res) => {
 });
 
 
+// Ruta para actualizar el stock de un lote
+router.put("/:id_lote", (req, res) => {
+    const { id_lote } = req.params;
+    const { stock } = req.body;  // Asegúrate de que este valor sea numérico
+  
+    if (isNaN(stock) || stock < 0) {
+      return res.status(400).json({ error: "❌ Stock inválido." });
+    }
+  
+    const sql = "UPDATE lotes SET stock = ? WHERE id_lote = ?";
+    con.query(sql, [stock, id_lote], (err, result) => {
+      if (err) {
+        console.error("❌ Error al actualizar el stock del lote:", err.message);
+        return res.status(500).json({ error: "Error interno en el servidor." });
+      }
+      if (result.affectedRows === 0) {
+        return res.status(404).json({ error: "Lote no encontrado." });
+      }
+      res.json({ message: "✅ Stock actualizado correctamente." });
+    });
+  });
+  
 
 export default router;
