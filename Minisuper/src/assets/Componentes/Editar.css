@@ -1,22 +1,11 @@
-/* Contenedor principal de la página de edición */
-.editar-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    width: 100vw;
-    background: linear-gradient(to bottom, rgb(107, 165, 101), rgb(0, 109, 94));
-    text-align: center;
-    overflow-y: auto;
-    padding: 20px;
-  }
+
+
   
   /* Estilo del título */
   .editar-container h2 {
     font-size: 2.5rem;
-    color: white;
-    margin-bottom: 20px;
+    color: rgb(255, 255, 255);
+    margin-bottom: 50px;
   }
   
   /* Estilo del formulario */

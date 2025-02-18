@@ -49,7 +49,16 @@ const Registro = () => {
       const numericValue = Number(value);
       newValue = numericValue >= 0 ? numericValue : ""; // No permite valores negativos
     }
-    
+
+    // Validación de la fecha (solo si es un campo de tipo fecha)
+    if (name === "fecha_vencimiento") {
+      const currentDate = new Date().toISOString().split("T")[0]; // Obtener la fecha actual en formato YYYY-MM-DD
+      if (value <= currentDate) {
+        alert("La fecha de vencimiento debe ser mayor a la fecha actual.");
+        return; // Si la fecha no es válida, no cambia el valor
+      }
+    }
+
     setter((prev) => ({
       ...prev,
       [name]: newValue,
@@ -70,6 +79,14 @@ const Registro = () => {
 
   const handleSubmitLote = async (e) => {
     e.preventDefault();
+
+    // Validación de la fecha antes de enviar
+    const currentDate = new Date().toISOString().split("T")[0]; // Obtener la fecha actual
+    if (lote.fecha_vencimiento <= currentDate) {
+      alert("La fecha de vencimiento debe ser mayor a la fecha actual.");
+      return; // Si la fecha no es válida, no envía el formulario
+    }
+
     try {
       await axios.post("http://localhost:5000/api/lotes", lote);
       alert("✅ Lote registrado con éxito!");

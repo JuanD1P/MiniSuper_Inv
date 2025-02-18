@@ -1,176 +1,130 @@
-/* Contenedor principal */
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #2c3e50;
+  color: #ecf0f1;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
 .venta-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    min-height: 100vh;
-    width: 100vw;
-    background: linear-gradient(to bottom, rgb(107, 165, 101), rgb(0, 109, 94)); 
-    text-align: center;
-    overflow-y: auto;
-    padding-bottom: 20px;
-  }
-  
-  /* Estilos para el título */
-  .titulo {
-    font-size: 2.5rem;
-    color: rgb(255, 255, 255);
-    text-align: center;
-    margin-top: 20px;
-  }
-  
-  /* Formulario de selección */
-  .venta-form {
-    margin-top: 20px;
-  }
+  background-color: #34495e;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  max-width: 800px;
+  width: 90%;
+}
 
-  .venta-form label {
-    color: #000000; /* Cambiar a color negro */
-  }
-  
-  .venta-form select {
-    padding: 10px 20px;
-    border-radius: 20px;
-    border: 2px solid #007bff;
-    background-color: #f4f4f4;
-    font-size: 1rem;
-    width: 300px;
-    margin: 10px 0;
-    outline: none;
-    transition: all 0.3s ease-in-out;
-    color: #000000; /* Cambiar el color de texto dentro de los campos */
-  }
-  
-  .venta-form select:focus {
-    background-color: #e0e0e0;
-    border-color: #0056b3;
-    box-shadow: 0px 0px 8px rgba(0, 91, 187, 0.5);
-  }
-  
-  /* Detalles del producto */
-  .producto-detalle {
-    margin-top: 30px;
-    padding: 20px;
-    background-color: #ffffff;
-    border-radius: 15px;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
-    width: 80%;
-    max-width: 900px;
-  }
-  
-  .producto-detalle h2 {
-    font-size: 2rem;
-    color: #000000;
-  }
-  
-  .producto-detalle p {
-    font-size: 1.2rem;
-    color: #333;
-  }
-  
-  /* Detalles del lote */
-  .lote-seleccion, .lote-detalle {
-    margin-top: 20px;
-    padding: 20px;
-    background-color: #ffffff;
-    border-radius: 15px;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
-    width: 80%;
-    max-width: 900px;
-  }
-  
-  .lote-seleccion h2, .lote-detalle h2 {
-    font-size: 2rem;
-    color: #000000;
-  }
+.logo {
+  display: block;
+  margin: 0 auto 20px auto;
+  width: 300px;
+  height: auto;
+}
 
-  .lote-seleccion label {
-    color: #000000; /* Cambiar a color negro */
-  }
+.titulo {
+  text-align: center;
+  color: #ecf0f1;
+  margin-bottom: 20px;
+}
 
-  .lote-seleccion select, .cantidad-seleccion input {
-    padding: 10px 20px;
-    border-radius: 20px;
-    border: 2px solid #007bff;
-    background-color: #f4f4f4;
-    font-size: 1rem;
-    width: 300px;
-    margin: 10px 0;
-    outline: none;
-    transition: all 0.3s ease-in-out;
-    color: #000000; /* Cambiar el color de texto dentro de los campos */
-  }
-  
-  .lote-seleccion select:focus, .cantidad-seleccion input:focus {
-    background-color: #e0e0e0;
-    border-color: #0056b3;
-    box-shadow: 0px 0px 8px rgba(0, 91, 187, 0.5);
-  }
-  
-  .lote-detalle p {
-    font-size: 1.2rem;
-    color: #333;
-  }
-  
-  /* Botón de realizar venta */
-  button {
-    padding: 12px 25px;
-    background: linear-gradient(to bottom, #FFD700, #DAA520);
-    color: #8B6508;
-    font-size: 1.2rem;
-    font-weight: bold;
-    border-radius: 25px;
-    border: 2px solid #B8860B;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
-    transition: all 0.3s ease;
-    cursor: pointer;
-  }
-  
-  button:hover {
-    background: linear-gradient(to bottom, #DAA520, #FFD700);
-    color: #5A3E00;
-    box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.4);
-  }
-  
-  /* Mensajes de error */
-  .error {
-    color: red;
-    font-size: 1rem;
-    margin-top: 10px;
-  }
-  
-  /* Estilos de la cantidad de venta */
-  .cantidad-seleccion {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-  }
+.venta-form,
+.lote-seleccion,
+.cantidad-seleccion {
+  margin: 20px 0;
+}
 
-  .cantidad-seleccion label {
-    color: #000000; /* Cambiar a color negro */
-  }
+label {
+  display: block;
+  margin-bottom: 10px;
+  color: #ecf0f1;
+}
 
-  /* Barra de búsqueda */
-  .barra-busqueda {
-    width: 40%;
-    padding: 8px 12px;
-    margin: 10px 0;
-    border: 2px solid #007bff;
-    border-radius: 20px;
-    outline: none;
-    font-size: 14px;
-    transition: all 0.3s ease-in-out;
-    background: #000a58;
-  }
-  
-  .barra-busqueda::placeholder {
-    color: #555;
-  }
-  
-  .barra-busqueda:focus {
-    background: #050256;
-    border-color: #0056b3;
-    box-shadow: 0px 0px 8px rgba(0, 91, 187, 0.5);
-  }
+select,
+input[type="number"] {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 16px;
+  background-color: #ecf0f1;
+  color: #2c3e50;
+  transition: box-shadow 0.3s;
+}
+
+select:focus,
+input[type="number"]:focus {
+  box-shadow: 0 0 10px rgba(41, 128, 185, 0.5);
+  outline: none;
+}
+
+button {
+  background-color: #2980b9;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 30px;
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  position: relative;
+  overflow: hidden;
+  margin: 20px 0;
+  display: block;
+  width: 100%;
+}
+
+button::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 300%;
+  height: 300%;
+  background-color: rgba(255, 255, 255, 0.2);
+  transition: all 0.75s;
+  border-radius: 50%;
+  transform: translate(-50%, -50%) scale(0);
+}
+
+button:hover::before {
+  transform: translate(-50%, -50%) scale(1);
+}
+
+button:hover {
+  background-color: #1f5a85;
+  transform: translateY(-3px);
+}
+
+.producto-detalle,
+.lote-detalle {
+  margin: 20px 0;
+  padding: 20px;
+  background-color: #2c3e50;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.producto-detalle h2,
+.lote-detalle h2 {
+  color: #ecf0f1;
+  margin-bottom: 10px;
+}
+
+p {
+  margin: 5px 0;
+}
+
+.error {
+  color: #e74c3c;
+  font-weight: bold;
+  margin-top: 10px;
+}

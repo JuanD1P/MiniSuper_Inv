@@ -6,7 +6,7 @@
     justify-content: flex-start;
     width: 100vw;
     min-height: 100vh;
-    background: linear-gradient(to bottom, rgb(0, 192, 64), rgb(0, 255, 128)); 
+    background-color: #34495e;
     text-align: center;
     padding-bottom: 20px;
     overflow-y: auto;
