@@ -56,7 +56,6 @@ const Inicio = () => {
     }
   };
 
-  // Función para filtrar productos según la búsqueda
   const productosFiltrados = productos.filter((producto) =>
     producto.nombre_Producto.toLowerCase().includes(busqueda.toLowerCase())
   );
@@ -72,13 +71,15 @@ const Inicio = () => {
       </div>
 
       {/* Barra de búsqueda */}
-      <input 
-        type="text" 
-        placeholder="🔍 Buscar producto..." 
-        className="barra-busqueda"
-        value={busqueda}
-        onChange={(e) => setBusqueda(e.target.value)}
-      />
+      <div className="barra-busqueda-container">
+        <input 
+          type="text" 
+          placeholder="🔍 Buscar producto..." 
+          className="barra-busqueda"
+          value={busqueda}
+          onChange={(e) => setBusqueda(e.target.value)}
+        />
+      </div>
 
       <div className="productos-container">
         <h2>Productos Registrados</h2>
