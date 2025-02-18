@@ -25,6 +25,8 @@ const Registro = () => {
     fecha_vencimiento: "",
   });
 
+  const [mostrarProducto, setMostrarProducto] = useState(true); // Estado para mostrar/ocultar el formulario de producto
+
   const fetchProductos = useCallback(async () => {
     try {
       const response = await axios.get("http://localhost:5000/api/productos");
@@ -82,63 +84,74 @@ const Registro = () => {
       <img src={logo} alt="Logo Mini Super" className="logo" />
       <button className="boton-inicio" onClick={() => navigate("/")}>⬅</button>
 
-      <h2>Registro de Producto</h2>
-      <form onSubmit={handleSubmitProducto} className="form-container">
-        {[
-          { label: "Nombre del producto", name: "nombre_Producto", type: "text" },
-          { label: "Descripción", name: "Descripcion", type: "textarea" },
-          { label: "Precio", name: "precio", type: "number" },
-          { label: "Unidad de medida", name: "unidad_de_medida", type: "text" },
-          { label: "Distribuidor", name: "distribuidor", type: "text" },
-          { label: "Stock mínimo", name: "stock_min", type: "number" },
-        ].map(({ label, name, type }) => (
-          <label key={name}>
-            {label}:
-            {type === "textarea" ? (
-              <textarea name={name} value={producto[name]} onChange={handleChange(setProducto)} required />
-            ) : (
-              <input type={type} name={name} value={producto[name]} onChange={handleChange(setProducto)} min="0" required />
-            )}
-          </label>
-        ))}
+      <button onClick={() => setMostrarProducto(true)}>Registrar Producto</button>
+      <button onClick={() => setMostrarProducto(false)}>Registrar Lote</button>
 
-        <label>
-          Categoría:
-          <select name="categoria" value={producto.categoria} onChange={handleChange(setProducto)} required>
-            <option value="1">Perecedero</option>
-            <option value="0">No Perecedero</option>
-          </select>
-        </label>
-
-        <button type="submit">Registrar Producto</button>
-      </form>
-
-      <h2>Registro de Lote</h2>
-      <form onSubmit={handleSubmitLote} className="form-container">
-        <label>
-          Producto:
-          <select name="id_producto" value={lote.id_producto} onChange={handleChange(setLote)} required>
-            <option value="">Seleccione un producto</option>
-            {productos.map((p) => (
-              <option key={p.id_producto} value={p.id_producto}>
-                {p.nombre_Producto}
-              </option>
+      {mostrarProducto && (
+        <>
+          <h2>Registro de Producto</h2>
+          <form onSubmit={handleSubmitProducto} className="form-container">
+            {[ 
+              { label: "Nombre del producto", name: "nombre_Producto", type: "text" },
+              { label: "Descripción", name: "Descripcion", type: "textarea" },
+              { label: "Precio", name: "precio", type: "number" },
+              { label: "Unidad de medida", name: "unidad_de_medida", type: "text" },
+              { label: "Distribuidor", name: "distribuidor", type: "text" },
+              { label: "Stock mínimo", name: "stock_min", type: "number" },
+            ].map(({ label, name, type }) => (
+              <label key={name}>
+                {label}:
+                {type === "textarea" ? (
+                  <textarea name={name} value={producto[name]} onChange={handleChange(setProducto)} required />
+                ) : (
+                  <input type={type} name={name} value={producto[name]} onChange={handleChange(setProducto)} min="0" required />
+                )}
+              </label>
             ))}
-          </select>
-        </label>
 
-        {[
-          { label: "Stock", name: "stock", type: "number" },
-          { label: "Fecha de vencimiento", name: "fecha_vencimiento", type: "date" },
-        ].map(({ label, name, type }) => (
-          <label key={name}>
-            {label}:
-            <input type={type} name={name} value={lote[name]} onChange={handleChange(setLote)} min={type === "number" ? "0" : undefined} required />
-          </label>
-        ))}
+            <label>
+              Categoría:
+              <select name="categoria" value={producto.categoria} onChange={handleChange(setProducto)} required>
+                <option value="1">Perecedero</option>
+                <option value="0">No Perecedero</option>
+              </select>
+            </label>
 
-        <button type="submit">Registrar Lote</button>
-      </form>
+            <button type="submit">Registrar Producto</button>
+          </form>
+        </>
+      )}
+
+      {!mostrarProducto && (
+        <>
+          <h2>Registro de Lote</h2>
+          <form onSubmit={handleSubmitLote} className="form-container">
+            <label>
+              Producto:
+              <select name="id_producto" value={lote.id_producto} onChange={handleChange(setLote)} required>
+                <option value="">Seleccione un producto</option>
+                {productos.map((p) => (
+                  <option key={p.id_producto} value={p.id_producto}>
+                    {p.nombre_Producto}
+                  </option>
+                ))}
+              </select>
+            </label>
+
+            {[ 
+              { label: "Stock", name: "stock", type: "number" },
+              { label: "Fecha de vencimiento", name: "fecha_vencimiento", type: "date" },
+            ].map(({ label, name, type }) => (
+              <label key={name}>
+                {label}:
+                <input type={type} name={name} value={lote[name]} onChange={handleChange(setLote)} min={type === "number" ? "0" : undefined} required />
+              </label>
+            ))}
+
+            <button type="submit">Registrar Lote</button>
+          </form>
+        </>
+      )}
     </div>
   );
 };
