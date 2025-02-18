@@ -71,6 +71,7 @@ router.delete("/:id", (req, res) => {
         res.json({ message: "✅ Producto eliminado correctamente" });
     });
 });
+
 // Ruta para obtener un producto por ID
 router.get("/:id", (req, res) => {
     const { id } = req.params;
@@ -113,6 +114,34 @@ router.put("/:id", (req, res) => {
             return res.status(500).json({ error: "Error al actualizar el producto", details: err.sqlMessage });
         }
         res.json({ message: "✅ Producto actualizado correctamente" });
+    });
+});
+
+// Ruta para actualizar el stock total de un producto
+router.put("/actualizar_stock/:id_producto", (req, res) => {
+    const { id_producto } = req.params;
+    const { cantidad } = req.body; // Recibimos la cantidad vendida
+
+    // Verificar que la cantidad sea válida
+    if (isNaN(cantidad) || cantidad <= 0) {
+        return res.status(400).json({ error: "La cantidad debe ser un número mayor a cero." });
+    }
+
+    // Actualizamos el stock total sumando la cantidad vendida
+    const sql = `
+        UPDATE producto 
+        SET stock_min = stock_min - ?
+        WHERE id_producto = ? AND stock_min >= ?`;
+
+    con.query(sql, [cantidad, id_producto, cantidad], (err, result) => {
+        if (err) {
+            console.error("❌ Error al actualizar el stock del producto:", err.message);
+            return res.status(500).json({ error: "Error al actualizar el stock del producto", details: err.sqlMessage });
+        }
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ error: "Producto no encontrado o stock insuficiente." });
+        }
+        res.json({ message: "✅ Stock del producto actualizado correctamente." });
     });
 });
 
