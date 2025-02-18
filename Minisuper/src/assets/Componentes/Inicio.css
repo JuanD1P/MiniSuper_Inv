@@ -15,7 +15,7 @@
 /* Logo centrado en la parte superior */
 .logo {
   margin-top: 20px;
-  width: 450px;
+  width: 450px !important;
   height: auto;
 }
 
