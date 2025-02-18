@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import "./Venta.css";
 
 const Venta = () => {
@@ -22,24 +22,55 @@ const Venta = () => {
   }, []);
 
   const handleProductoChange = async (event) => {
-    const producto = productos.find(p => p.id_producto === parseInt(event.target.value));
+    const productoId = parseInt(event.target.value);
+    console.log(`🛒 Producto ID seleccionado: ${productoId}`);
+  
+    // 🔍 Verifica si el producto está en la lista
+    console.log("📋 Lista de productos:", productos);
+  
+    const producto = productos.find((p) => p.id_producto === productoId);
+  
+    if (!producto) {
+      console.warn(`⚠️ No se encontró un producto con ID: ${productoId}`);
+      setProductoSeleccionado(null);
+      setLotes([]);
+      return;
+    }
+  
+    console.log(`✅ Producto encontrado: ${producto.nombre_Producto}`);
     setProductoSeleccionado(producto);
     setLoteSeleccionado(null);
-    
-    if (producto) {
-      try {
-        const response = await axios.get(`http://localhost:5000/api/lotes?productoId=${producto.id_producto}`);
-        setLotes(response.data);
-      } catch (error) {
-        console.error("❌ Error al obtener los lotes:", error);
+  
+    try {
+      console.log(`🔎 Buscando lotes para el producto: ${producto.nombre_Producto}`);
+  
+      const response = await axios.get(`http://localhost:5000/api/lotes`);
+      console.log("📦 Lotes obtenidos:", response.data);
+  
+      const productoNombre = producto?.nombre_Producto?.trim().toLowerCase() || "";
+      console.log(`🔍 Nombre del producto seleccionado: '${productoNombre}'`);
+  
+      const lotesFiltrados = response.data.filter(
+        (lote) => lote.nombre_Producto?.trim().toLowerCase() === productoNombre
+      );
+  
+      if (lotesFiltrados.length === 0) {
+        console.warn("⚠️ No se encontraron lotes para este producto.");
+      } else {
+        console.log("✅ Lotes encontrados:", lotesFiltrados);
       }
-    } else {
+  
+      setLotes(lotesFiltrados);
+    } catch (error) {
+      console.error("❌ Error al obtener los lotes:", error);
       setLotes([]);
     }
   };
-
+   
   const handleLoteChange = (event) => {
-    const lote = lotes.find(l => l.id_lote === parseInt(event.target.value));
+    const loteId = parseInt(event.target.value);
+    console.log(`🔢 Lote seleccionado: ${loteId}`);
+    const lote = lotes.find((l) => l.id_lote === loteId);
     setLoteSeleccionado(lote);
   };
 
@@ -86,7 +117,7 @@ const Venta = () => {
         <div className="lote-detalle">
           <h2>Detalles del Lote</h2>
           <p><strong>Fecha de Vencimiento:</strong> {loteSeleccionado.fecha_vencimiento}</p>
-          <p><strong>Stock Total:</strong> {loteSeleccionado.stockTotal}</p>
+          <p><strong>Stock Total:</strong> {loteSeleccionado.stock}</p>
         </div>
       )}
     </div>
