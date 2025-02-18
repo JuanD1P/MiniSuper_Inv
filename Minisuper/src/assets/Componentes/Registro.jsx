@@ -5,7 +5,7 @@ import "./Registro.css";
 import logo from "./Recursos/LOGUITO.png";
 
 const Registro = () => {
-  const navigate = useNavigate(); // Hook para navegar entre rutas
+  const navigate = useNavigate();
 
   const [producto, setProducto] = useState({
     nombre_Producto: "",
@@ -41,9 +41,16 @@ const Registro = () => {
 
   const handleChange = (setter) => (e) => {
     const { name, value } = e.target;
+    
+    let newValue = value.trim();
+    if (["precio", "stock_min", "stock"].includes(name)) {
+      const numericValue = Number(value);
+      newValue = numericValue >= 0 ? numericValue : ""; // No permite valores negativos
+    }
+    
     setter((prev) => ({
       ...prev,
-      [name]: ["precio", "stock_min", "stock"].includes(name) ? (value ? Number(value) : "") : value.trim(),
+      [name]: newValue,
     }));
   };
 
@@ -90,7 +97,7 @@ const Registro = () => {
             {type === "textarea" ? (
               <textarea name={name} value={producto[name]} onChange={handleChange(setProducto)} required />
             ) : (
-              <input type={type} name={name} value={producto[name]} onChange={handleChange(setProducto)} required />
+              <input type={type} name={name} value={producto[name]} onChange={handleChange(setProducto)} min="0" required />
             )}
           </label>
         ))}
@@ -126,7 +133,7 @@ const Registro = () => {
         ].map(({ label, name, type }) => (
           <label key={name}>
             {label}:
-            <input type={type} name={name} value={lote[name]} onChange={handleChange(setLote)} required />
+            <input type={type} name={name} value={lote[name]} onChange={handleChange(setLote)} min={type === "number" ? "0" : undefined} required />
           </label>
         ))}
 
