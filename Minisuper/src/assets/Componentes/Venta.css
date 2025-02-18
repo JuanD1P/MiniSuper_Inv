@@ -1,0 +1,176 @@
+/* Contenedor principal */
+.venta-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    min-height: 100vh;
+    width: 100vw;
+    background: linear-gradient(to bottom, rgb(107, 165, 101), rgb(0, 109, 94)); 
+    text-align: center;
+    overflow-y: auto;
+    padding-bottom: 20px;
+  }
+  
+  /* Estilos para el título */
+  .titulo {
+    font-size: 2.5rem;
+    color: rgb(255, 255, 255);
+    text-align: center;
+    margin-top: 20px;
+  }
+  
+  /* Formulario de selección */
+  .venta-form {
+    margin-top: 20px;
+  }
+
+  .venta-form label {
+    color: #000000; /* Cambiar a color negro */
+  }
+  
+  .venta-form select {
+    padding: 10px 20px;
+    border-radius: 20px;
+    border: 2px solid #007bff;
+    background-color: #f4f4f4;
+    font-size: 1rem;
+    width: 300px;
+    margin: 10px 0;
+    outline: none;
+    transition: all 0.3s ease-in-out;
+    color: #000000; /* Cambiar el color de texto dentro de los campos */
+  }
+  
+  .venta-form select:focus {
+    background-color: #e0e0e0;
+    border-color: #0056b3;
+    box-shadow: 0px 0px 8px rgba(0, 91, 187, 0.5);
+  }
+  
+  /* Detalles del producto */
+  .producto-detalle {
+    margin-top: 30px;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 15px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+    width: 80%;
+    max-width: 900px;
+  }
+  
+  .producto-detalle h2 {
+    font-size: 2rem;
+    color: #000000;
+  }
+  
+  .producto-detalle p {
+    font-size: 1.2rem;
+    color: #333;
+  }
+  
+  /* Detalles del lote */
+  .lote-seleccion, .lote-detalle {
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 15px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+    width: 80%;
+    max-width: 900px;
+  }
+  
+  .lote-seleccion h2, .lote-detalle h2 {
+    font-size: 2rem;
+    color: #000000;
+  }
+
+  .lote-seleccion label {
+    color: #000000; /* Cambiar a color negro */
+  }
+
+  .lote-seleccion select, .cantidad-seleccion input {
+    padding: 10px 20px;
+    border-radius: 20px;
+    border: 2px solid #007bff;
+    background-color: #f4f4f4;
+    font-size: 1rem;
+    width: 300px;
+    margin: 10px 0;
+    outline: none;
+    transition: all 0.3s ease-in-out;
+    color: #000000; /* Cambiar el color de texto dentro de los campos */
+  }
+  
+  .lote-seleccion select:focus, .cantidad-seleccion input:focus {
+    background-color: #e0e0e0;
+    border-color: #0056b3;
+    box-shadow: 0px 0px 8px rgba(0, 91, 187, 0.5);
+  }
+  
+  .lote-detalle p {
+    font-size: 1.2rem;
+    color: #333;
+  }
+  
+  /* Botón de realizar venta */
+  button {
+    padding: 12px 25px;
+    background: linear-gradient(to bottom, #FFD700, #DAA520);
+    color: #8B6508;
+    font-size: 1.2rem;
+    font-weight: bold;
+    border-radius: 25px;
+    border: 2px solid #B8860B;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background: linear-gradient(to bottom, #DAA520, #FFD700);
+    color: #5A3E00;
+    box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.4);
+  }
+  
+  /* Mensajes de error */
+  .error {
+    color: red;
+    font-size: 1rem;
+    margin-top: 10px;
+  }
+  
+  /* Estilos de la cantidad de venta */
+  .cantidad-seleccion {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .cantidad-seleccion label {
+    color: #000000; /* Cambiar a color negro */
+  }
+
+  /* Barra de búsqueda */
+  .barra-busqueda {
+    width: 40%;
+    padding: 8px 12px;
+    margin: 10px 0;
+    border: 2px solid #007bff;
+    border-radius: 20px;
+    outline: none;
+    font-size: 14px;
+    transition: all 0.3s ease-in-out;
+    background: #000a58;
+  }
+  
+  .barra-busqueda::placeholder {
+    color: #555;
+  }
+  
+  .barra-busqueda:focus {
+    background: #050256;
+    border-color: #0056b3;
+    box-shadow: 0px 0px 8px rgba(0, 91, 187, 0.5);
+  }

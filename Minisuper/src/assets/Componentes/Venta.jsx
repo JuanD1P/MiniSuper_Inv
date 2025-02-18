@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./Venta.css";
+import logo from './Recursos/LOGUITO.png';  // Asegúrate de que el logo esté en la ruta correcta
 
 const Venta = () => {
   const [productos, setProductos] = useState([]);
@@ -135,7 +136,9 @@ const Venta = () => {
 
   return (
     <div className="venta-container">
+      <img src={logo} alt="Logo Mini Super" className="logo" />
       <h1 className="titulo">🛒 Realizar Venta</h1>
+
       <div className="venta-form">
         <label htmlFor="producto">Seleccionar Producto:</label>
         <select id="producto" onChange={handleProductoChange}>
