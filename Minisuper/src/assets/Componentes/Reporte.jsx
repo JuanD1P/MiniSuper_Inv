@@ -12,6 +12,7 @@ const Reporte = () => {
   const [stocks, setStocks] = useState([]);
 
   useEffect(() => {
+    // Funcion para actualizar la fecha y hora actual
     const actualizarFechaHora = () => {
       const opciones = { 
         timeZone: "America/Bogota",
@@ -34,12 +35,14 @@ const Reporte = () => {
   }, []);
 
   useEffect(() => {
+    // Funcion para obtener datos de la API
     const fetchData = async () => {
       try {
         const productosResponse = await axios.get("http://localhost:5000/api/productos");
         const lotesResponse = await axios.get("http://localhost:5000/api/lotes");
         const stocksResponse = await axios.get("http://localhost:5000/api/lotes/stocks");
 
+        // Asociar el stock total con cada producto
         const productosConStock = productosResponse.data.map(producto => {
           const stockTotal = stocksResponse.data.find(stock => stock.id_producto === producto.id_producto)?.total_stock || 0;
           return { ...producto, stockTotal };
@@ -49,18 +52,18 @@ const Reporte = () => {
         setLotes(lotesResponse.data);
         setStocks(stocksResponse.data);
       } catch (error) {
-        console.error("❌ Error al obtener los datos:", error);
+        console.error("Error al obtener los datos:", error);
       }
     };
 
     fetchData();
   }, []);
 
-  // Calcular la fecha actual + 10 días
+  // Calcular la fecha actual + 10 dias
   const fechaLimite = new Date();
   fechaLimite.setDate(fechaLimite.getDate() + 10);
 
-  // Filtrar lotes que vencen en los próximos 10 días
+  // Filtrar lotes que vencen en los proximos 10 dias
   const lotesProximosAVencer = lotes.filter((lote) => {
     const fechaVencimiento = new Date(lote.fecha_vencimiento);
     return fechaVencimiento <= fechaLimite;
@@ -80,7 +83,7 @@ const Reporte = () => {
 
       <div className="titulo-container">
         <h1 className="titulo">
-          📋 Reporte de Productos y Lotes
+          Reporte de Productos y Lotes
         </h1>
         <button className="boton-inicio" onClick={() => navigate("/")}>
           ⬅
@@ -89,13 +92,13 @@ const Reporte = () => {
 
       <div className="tablas-contenedor">
         <div className="tabla-box">
-          <h2 className="subtitulo">⚠️ Productos con Stock Bajo</h2>
+          <h2 className="subtitulo">Productos con Stock Bajo</h2>
           <table className="tabla">
             <thead>
               <tr>
                 <th>ID</th>
                 <th>Nombre</th>
-                <th>Stock Mínimo</th>
+                <th>Stock Minimo</th>
                 <th>Stock Total</th>
                 <th>Distribuidor</th>
               </tr>
@@ -115,13 +118,13 @@ const Reporte = () => {
         </div>
 
         <div className="tabla-box">
-          <h2 className="subtitulo">⏳ Lotes Próximos a Vencer (Menos de 10 días)</h2>
+          <h2 className="subtitulo">Lotes Proximos a Vencer (Menos de 10 dias)</h2>
           <table className="tabla">
             <thead>
               <tr>
                 <th>ID Lote</th>
                 <th>Producto</th>
-                <th>Días para Vencer</th>
+                <th>Dias para Vencer</th>
               </tr>
             </thead>
             <tbody>
@@ -135,7 +138,7 @@ const Reporte = () => {
                 ))
               ) : (
                 <tr>
-                  <td colSpan="3">✅ No hay lotes próximos a vencer</td>
+                  <td colSpan="3">No hay lotes proximos a vencer</td>
                 </tr>
               )}
             </tbody>

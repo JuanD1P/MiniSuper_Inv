@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./Venta.css";
-import logo from './Recursos/LOGUITO.png';  // Asegúrate de que el logo esté en la ruta correcta
-
+import logo from './Recursos/LOGUITO.png';  // Logo
+// Estados para almacenar datos y gestionar la interaccion
 const Venta = () => {
   const [productos, setProductos] = useState([]);
   const [productoSeleccionado, setProductoSeleccionado] = useState(null);
@@ -10,8 +10,8 @@ const Venta = () => {
   const [loteSeleccionado, setLoteSeleccionado] = useState(null);
   const [cantidad, setCantidad] = useState(0);
   const [errorCantidad, setErrorCantidad] = useState("");
-  const [errorVenta, setErrorVenta] = useState(""); // Error de venta general
-
+  const [errorVenta, setErrorVenta] = useState(""); 
+// useEffect para cargar la lista de productos al montar el componente
   useEffect(() => {
     const fetchProductos = async () => {
       try {
@@ -24,7 +24,7 @@ const Venta = () => {
 
     fetchProductos();
   }, []);
-
+// Maneja el cambio de seleccion del producto
   const handleProductoChange = async (event) => {
     const productoId = parseInt(event.target.value);
     console.log(`🛒 Producto ID seleccionado: ${productoId}`);
@@ -41,8 +41,8 @@ const Venta = () => {
     console.log(`✅ Producto encontrado: ${producto.nombre_Producto}`);
     setProductoSeleccionado(producto);
     setLoteSeleccionado(null);
-    setCantidad(0); // Resetear cantidad seleccionada
-    setErrorCantidad(""); // Resetear mensaje de error
+    setCantidad(0); 
+    setErrorCantidad(""); 
 
     try {
       const response = await axios.get(`http://localhost:5000/api/lotes`);
@@ -60,15 +60,15 @@ const Venta = () => {
       setLotes([]);
     }
   };
-
+// Maneja la seleccion de un lote
   const handleLoteChange = (event) => {
     const loteId = parseInt(event.target.value);
     const lote = lotes.find((l) => l.id_lote === loteId);
     setLoteSeleccionado(lote);
-    setCantidad(0); // Resetear cantidad al cambiar de lote
-    setErrorCantidad(""); // Resetear mensaje de error
+    setCantidad(0); 
+    setErrorCantidad(""); 
   };
-
+// Maneja la entrada de la cantidad
   const handleCantidadChange = (event) => {
     const value = parseInt(event.target.value, 10);
 
@@ -86,7 +86,7 @@ const Venta = () => {
     }
   };
 
-  // Función para actualizar el stock del lote
+  // Actualizar el stock en la base de datos
   const actualizarStockLote = async (loteId, cantidadVendida) => {
     try {
       const nuevoStock = loteSeleccionado.stock - cantidadVendida;
@@ -110,25 +110,22 @@ const Venta = () => {
       }
     }
   };
-
+// Maneja la logica para realizar una venta
   const handleRealizarVenta = async () => {
     if (loteSeleccionado && cantidad > 0 && cantidad <= loteSeleccionado.stock) {
       if (!productoSeleccionado) {
         console.error("❌ Producto no seleccionado.");
-        return; // Si no hay un producto seleccionado, no continuar
+        return; 
       }
-
       console.log(`Venta realizada: ${cantidad} unidades del producto ${productoSeleccionado.nombre_Producto} (Lote ID: ${loteSeleccionado.id_lote})`);
-
-      // Actualizar el stock del lote en la base de datos
+  // Actualizar el stock del lote en la base de datos
       await actualizarStockLote(loteSeleccionado.id_lote, cantidad);
-
-      // Limpiar el formulario después de realizar la venta
+ // Limpiar el formulario despues de realizar la venta
       setCantidad(0); // Resetear cantidad
-      setErrorCantidad(""); // Resetear mensaje de error
-      setProductoSeleccionado(null); // Resetear producto
-      setLoteSeleccionado(null); // Resetear lote
-      setLotes([]); // Limpiar lotes disponibles
+      setErrorCantidad(""); 
+      setProductoSeleccionado(null); 
+      setLoteSeleccionado(null); 
+      setLotes([]); 
     } else {
       setErrorCantidad("❌ Por favor, ingrese una cantidad válida para la venta.");
     }

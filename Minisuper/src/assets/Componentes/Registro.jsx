@@ -7,17 +7,21 @@ import logo from "./Recursos/LOGUITO.png";
 const Registro = () => {
   const navigate = useNavigate();
 
+  // Estado para almacenar los datos del producto a registrar
   const [producto, setProducto] = useState({
     nombre_Producto: "",
     Descripcion: "",
     precio: "",
     unidad_de_medida: "",
-    categoria: "1",
+    categoria: "1", 
     distribuidor: "",
     stock_min: "",
   });
 
+  // Estado para almacenar la lista de productos obtenidos del servidor
   const [productos, setProductos] = useState([]);
+  
+  // Estado para almacenar los datos del lote a registrar
   const [lote, setLote] = useState({
     id_producto: "",
     numero_lote: "",
@@ -25,51 +29,54 @@ const Registro = () => {
     fecha_vencimiento: "",
   });
 
-  const [mostrarProducto, setMostrarProducto] = useState(true); // Estado para mostrar/ocultar el formulario de producto
+  // Estado para alternar entre los formularios de producto y lote
+  const [mostrarProducto, setMostrarProducto] = useState(true);
 
+  // Funcion para obtener la lista de productos desde el backend
   const fetchProductos = useCallback(async () => {
     try {
       const response = await axios.get("http://localhost:5000/api/productos");
       setProductos(response.data);
     } catch (error) {
-      console.error("❌ Error al obtener productos:", error);
+      console.error("Error al obtener productos:", error);
       alert("Error al cargar los productos.");
     }
   }, []);
 
+  // Obtener productos al cargar el componente
   useEffect(() => {
     fetchProductos();
   }, [fetchProductos]);
 
+  // Manejar cambios en los inputs
   const handleChange = (setter) => (e) => {
     const { name, value } = e.target;
-    
     let newValue = value.trim();
+
+    // Validar que ciertos campos numericos no tengan valores negativos
     if (["precio", "stock_min", "stock"].includes(name)) {
       const numericValue = Number(value);
-      newValue = numericValue >= 0 ? numericValue : ""; // No permite valores negativos
+      newValue = numericValue >= 0 ? numericValue : "";
     }
 
-    // Validación de la fecha (solo si es un campo de tipo fecha)
+    // Validar que la fecha de vencimiento sea futura
     if (name === "fecha_vencimiento") {
-      const currentDate = new Date().toISOString().split("T")[0]; // Obtener la fecha actual en formato YYYY-MM-DD
+      const currentDate = new Date().toISOString().split("T")[0];
       if (value <= currentDate) {
         alert("La fecha de vencimiento debe ser mayor a la fecha actual.");
-        return; // Si la fecha no es válida, no cambia el valor
+        return;
       }
     }
 
-    setter((prev) => ({
-      ...prev,
-      [name]: newValue,
-    }));
+    setter((prev) => ({ ...prev, [name]: newValue }));
   };
 
+  // Manejar el envio del formulario de producto
   const handleSubmitProducto = async (e) => {
     e.preventDefault();
     try {
       await axios.post("http://localhost:5000/api/productos", { ...producto, categoria: Number(producto.categoria) });
-      alert("✅ Producto registrado con éxito!");
+      alert("Producto registrado con exito!");
       setProducto({ nombre_Producto: "", Descripcion: "", precio: "", unidad_de_medida: "", categoria: "1", distribuidor: "", stock_min: "" });
       fetchProductos();
     } catch (error) {
@@ -77,19 +84,17 @@ const Registro = () => {
     }
   };
 
+  // Manejar el envio del formulario de lote
   const handleSubmitLote = async (e) => {
     e.preventDefault();
-
-    // Validación de la fecha antes de enviar
-    const currentDate = new Date().toISOString().split("T")[0]; // Obtener la fecha actual
+    const currentDate = new Date().toISOString().split("T")[0];
     if (lote.fecha_vencimiento <= currentDate) {
       alert("La fecha de vencimiento debe ser mayor a la fecha actual.");
-      return; // Si la fecha no es válida, no envía el formulario
+      return;
     }
-
     try {
       await axios.post("http://localhost:5000/api/lotes", lote);
-      alert("✅ Lote registrado con éxito!");
+      alert("Lote registrado con exito!");
       setLote({ id_producto: "", numero_lote: "", stock: "", fecha_vencimiento: "" });
     } catch (error) {
       alert("Error al registrar el lote.");
@@ -104,17 +109,17 @@ const Registro = () => {
       <button onClick={() => setMostrarProducto(true)}>Registrar Producto</button>
       <button onClick={() => setMostrarProducto(false)}>Registrar Lote</button>
 
-      {mostrarProducto && (
+      {mostrarProducto ? (
         <>
           <h2>Registro de Producto</h2>
           <form onSubmit={handleSubmitProducto} className="form-container">
-            {[ 
+            {[
               { label: "Nombre del producto", name: "nombre_Producto", type: "text" },
-              { label: "Descripción", name: "Descripcion", type: "textarea" },
+              { label: "Descripcion", name: "Descripcion", type: "textarea" },
               { label: "Precio", name: "precio", type: "number" },
               { label: "Unidad de medida", name: "unidad_de_medida", type: "text" },
               { label: "Distribuidor", name: "distribuidor", type: "text" },
-              { label: "Stock mínimo", name: "stock_min", type: "number" },
+              { label: "Stock minimo", name: "stock_min", type: "number" },
             ].map(({ label, name, type }) => (
               <label key={name}>
                 {label}:
@@ -127,7 +132,7 @@ const Registro = () => {
             ))}
 
             <label>
-              Categoría:
+              Categoria:
               <select name="categoria" value={producto.categoria} onChange={handleChange(setProducto)} required>
                 <option value="1">Perecedero</option>
                 <option value="0">No Perecedero</option>
@@ -137,9 +142,7 @@ const Registro = () => {
             <button type="submit">Registrar Producto</button>
           </form>
         </>
-      )}
-
-      {!mostrarProducto && (
+      ) : (
         <>
           <h2>Registro de Lote</h2>
           <form onSubmit={handleSubmitLote} className="form-container">
@@ -148,22 +151,13 @@ const Registro = () => {
               <select name="id_producto" value={lote.id_producto} onChange={handleChange(setLote)} required>
                 <option value="">Seleccione un producto</option>
                 {productos.map((p) => (
-                  <option key={p.id_producto} value={p.id_producto}>
-                    {p.nombre_Producto}
-                  </option>
+                  <option key={p.id_producto} value={p.id_producto}>{p.nombre_Producto}</option>
                 ))}
               </select>
             </label>
 
-            {[ 
-              { label: "Stock", name: "stock", type: "number" },
-              { label: "Fecha de vencimiento", name: "fecha_vencimiento", type: "date" },
-            ].map(({ label, name, type }) => (
-              <label key={name}>
-                {label}:
-                <input type={type} name={name} value={lote[name]} onChange={handleChange(setLote)} min={type === "number" ? "0" : undefined} required />
-              </label>
-            ))}
+            <label>Stock:<input type="number" name="stock" value={lote.stock} onChange={handleChange(setLote)} min="0" required /></label>
+            <label>Fecha de vencimiento:<input type="date" name="fecha_vencimiento" value={lote.fecha_vencimiento} onChange={handleChange(setLote)} required /></label>
 
             <button type="submit">Registrar Lote</button>
           </form>

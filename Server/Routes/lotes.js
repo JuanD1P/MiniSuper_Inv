@@ -3,7 +3,10 @@ import con from "../utils/db.js";
 
 const router = express.Router();
 
-// Ruta para registrar un nuevo lote
+/**
+ * Ruta para registrar un nuevo lote en la base de datos.
+ * Se requiere `id_producto`, `stock` y `fecha_vencimiento` en el cuerpo de la solicitud.
+ */
 router.post("/", (req, res) => {
     const { id_producto, stock, fecha_vencimiento } = req.body;
 
@@ -18,12 +21,15 @@ router.post("/", (req, res) => {
             console.error("Error al registrar el lote:", err);
             return res.status(500).json({ error: "Error al registrar el lote", err });
         }
-        console.log("Lote registrado con éxito, ID:", result.insertId);
-        res.json({ message: "Lote registrado con éxito", id: result.insertId });
+        console.log("Lote registrado con exito, ID:", result.insertId);
+        res.json({ message: "Lote registrado con exito", id: result.insertId });
     });
 });
 
-// Ruta para obtener todos los lotes
+/**
+ * Ruta para obtener todos los lotes registrados.
+ * Retorna los lotes junto con el nombre del producto asociado.
+ */
 router.get("/", (req, res) => {
     const sql = `
         SELECT 
@@ -44,8 +50,13 @@ router.get("/", (req, res) => {
     });
 });
 
+/**
+ * Ruta para obtener el stock total agrupado por producto.
+ * Retorna una lista con el `id_producto` y la suma total del `stock`.
+ */
 router.get("/stocks", (req, res) => {
     const sql = `SELECT id_producto, SUM(stock) AS total_stock FROM lotes GROUP BY id_producto`;
+    
     con.query(sql, (err, results) => {
         if (err) {
             console.error("Error al obtener los stocks:", err);
@@ -55,28 +66,31 @@ router.get("/stocks", (req, res) => {
     });
 });
 
-
-// Ruta para actualizar el stock de un lote
+/**
+ * Ruta para actualizar el stock de un lote especifico.
+ * Se requiere el `id_lote` en los parametros y el nuevo `stock` en el cuerpo de la solicitud.
+ */
 router.put("/:id_lote", (req, res) => {
     const { id_lote } = req.params;
-    const { stock } = req.body;  // Asegúrate de que este valor sea numérico
-  
+    const { stock } = req.body;
+
+    // Validacion del stock
     if (isNaN(stock) || stock < 0) {
-      return res.status(400).json({ error: "❌ Stock inválido." });
+        return res.status(400).json({ error: "Stock invalido." });
     }
-  
+
     const sql = "UPDATE lotes SET stock = ? WHERE id_lote = ?";
+
     con.query(sql, [stock, id_lote], (err, result) => {
-      if (err) {
-        console.error("❌ Error al actualizar el stock del lote:", err.message);
-        return res.status(500).json({ error: "Error interno en el servidor." });
-      }
-      if (result.affectedRows === 0) {
-        return res.status(404).json({ error: "Lote no encontrado." });
-      }
-      res.json({ message: "✅ Stock actualizado correctamente." });
+        if (err) {
+            console.error("Error al actualizar el stock del lote:", err.message);
+            return res.status(500).json({ error: "Error interno en el servidor." });
+        }
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ error: "Lote no encontrado." });
+        }
+        res.json({ message: "Stock actualizado correctamente." });
     });
-  });
-  
+});
 
 export default router;
